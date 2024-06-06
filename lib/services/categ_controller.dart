@@ -13,9 +13,15 @@ class CategController {
     return false;
   }
 
+  // Get is implemented implicitly through FutureBuilder
+
+  // Insert is implemented directly through list.Add(Categ newCateg);
+
   void updateCateg(Categ categOld, String title, String description, String imgPath) {
     Categ categNew = Categ(title: title, description: description, imgPath: imgPath);
     int index = savedCategories!.indexOf(categOld);
     savedCategories![index] = categNew;
   }
+
+  // Delete is implemented directly through list.Remove(Categ oldCateg);
 }

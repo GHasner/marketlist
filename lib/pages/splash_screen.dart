@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:marketlist/pages/index.dart';
+import 'package:marketlist/pages/market_list.dart';
+import 'package:marketlist/services/navigationState_shared_preferences.dart';
 import 'package:marketlist/src/shared/themes/colors.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -15,9 +16,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
+    NavigationStateSharedPreferences.savePageState('list');
+    NavigationStateSharedPreferences.saveProductPageState('notSelected');
+
     Timer(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const Index()));
+          MaterialPageRoute(builder: (_) => const MarketListScreen()));
     });
   }
 
