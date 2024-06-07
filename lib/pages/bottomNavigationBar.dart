@@ -1,12 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
-/* abas['Produtos', 'Lista de Compras']
-
-Produtos exibe CategSelectScreen e ItemListScreen em seus estados atuais
-Lista de Compras exibe os itens com quantidade > 0
-
-*/
-
 import 'package:flutter/material.dart';
 import 'package:marketlist/pages/categ_selection.dart';
 import 'package:marketlist/pages/item_list.dart';
@@ -29,7 +21,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     if (_tabSelected == 'list') {
       _selectedIndex = 1;
     } else {
-      setState(() {
+      setState(() { // Remover setState
         _selectedIndex = 0;
       });
     }
@@ -73,7 +65,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     return BottomNavigationBar(
       currentIndex: _selectedIndex,
       onTap: (index) {
-        setState(() {
+        setState(() { // Remover setState
           _selectedIndex = index;
           setPageState(index);
         });
