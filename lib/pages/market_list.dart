@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:marketlist/pages/bottomNavigationBar.dart';
 
 class MarketListScreen extends StatefulWidget {
   const MarketListScreen({super.key});
@@ -10,6 +11,8 @@ class MarketListScreen extends StatefulWidget {
 class _MarketListScreenState extends State<MarketListScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      bottomNavigationBar: BottomNavBar(),
+    );
   }
 }

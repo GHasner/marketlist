@@ -42,16 +42,18 @@ class _ItemListScreenState extends State<ItemListScreen> {
   }
 
   Widget loadItems() {
-    if (itemListIsEmpty) return Text("Não há nenhum produto registado$autoRef.");
+    if (itemListIsEmpty)
+      return Text("Não há nenhum produto registado$autoRef.");
     return FutureBuilder<List<Item>?>(
       future: ItemPreferencesService.get(),
       builder: (context, AsyncSnapshot<List<Item>?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          return Text('Ocorreu um erro ao carregar os items: ${snapshot.error}');
+          return Text(
+              'Ocorreu um erro ao carregar os items: ${snapshot.error}');
         } else if (snapshot.hasData) {
-          if(snapshot.data != null) {
+          if (snapshot.data != null) {
             // TileList
           }
         }
