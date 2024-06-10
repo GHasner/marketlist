@@ -41,6 +41,12 @@ class ItemController {
     setData();
   }
 
+  static void updateQnt(Item item, int alt) {
+    int newQnt = item.quant + alt;
+    Item updatedItem = Item(categ: item.categ, title: item.title, price: item.price, quant: newQnt);
+    update(item, updatedItem);
+  }
+
   static void delete(Item item) {
     savedItems!.remove(item);
     setData();
