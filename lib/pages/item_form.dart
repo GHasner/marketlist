@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:marketlist/models/item.dart';
 
 class ItemFormScreen extends StatefulWidget {
-  final Item item;
+  final Item? item;
   
   const ItemFormScreen({super.key, required this.item});
 
@@ -11,8 +11,9 @@ class ItemFormScreen extends StatefulWidget {
 }
 
 class _ItemFormScreenState extends State<ItemFormScreen> {
-  Item get _item => widget.item;
+  Item? get _item => widget.item;
 
+// Se item == null ADD Else EDIT
 // Ao criar um item a qantidade é definida como 0
 
   @override

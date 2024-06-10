@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:marketlist/models/categ.dart';
+import 'package:marketlist/pages/item_list.dart';
 import 'package:marketlist/services/categ_shared_preferences.dart';
 
 class CategSelectScreen extends StatefulWidget {
@@ -33,9 +34,18 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
         } else if (snapshot.hasError) {
           return Text('Ocorreu um erro ao carregar as categorias: ${snapshot.error}');
         } else if (snapshot.hasData) {
-          if(snapshot.data != null) {
-            // TileList
-          }
+          ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                leading: Image.asset(snapshot.data![index].imgPath!),
+                title: Text(snapshot.data![index].title),
+                subtitle: Text(snapshot.data![index].description!),
+                onTap: () => MaterialPageRoute(
+                  builder: (context) => ItemListScreen(categ: snapshot.data![index].title)),
+              );
+            },
+          );
         }
         return const SizedBox(height: 20);
       },
@@ -48,11 +58,18 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
       body: Column(
         children: <Widget>[
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              MaterialPageRoute(
+                  builder: (context) => const ItemListScreen(categ: ''));
+            },
             child: const Text("Todos os Produtos"),
           ),
           loadCategories(),
           // create Categ TileList
+          ElevatedButton(
+            onPressed: () {},
+            child: const Text("Nova Categoria"),
+          ),
         ],
       ),
     );
