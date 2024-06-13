@@ -1,33 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:marketlist/pages/bottomNavigationBar.dart';
+import 'package:marketlist/models/categ.dart';
 import 'package:marketlist/services/categ_controller.dart';
-import 'package:marketlist/services/categ_shared_preferences.dart';
 
 class CategFormScreen extends StatefulWidget {
-  const CategFormScreen({super.key});
+  final Categ? categ;
+
+  const CategFormScreen({super.key, this.categ});
 
   @override
   State<CategFormScreen> createState() => _CategFormScreenState();
 }
 
 class _CategFormScreenState extends State<CategFormScreen> {
-  late CategController categController;
+  Categ? get _categ => widget.categ;
 
-  Future<void> getSavedCategories() async {
-    categController =
-        CategController(savedCategories: await CategPreferencesService.get());
-  }
+  // Se categ == null ADD Else EDIT 
 
   @override
   void initState() {
     super.initState();
-    getSavedCategories();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: BottomNavBar(),
-    );
+    return const Placeholder();
   }
 }

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:marketlist/models/categ.dart';
+import 'package:marketlist/pages/bottomNavigationBar.dart';
+import 'package:marketlist/pages/categ_form.dart';
 import 'package:marketlist/pages/item_list.dart';
+import 'package:marketlist/services/categ_controller.dart';
 import 'package:marketlist/services/categ_shared_preferences.dart';
+import 'package:marketlist/src/shared/themes/colors.dart';
 
 class CategSelectScreen extends StatefulWidget {
   const CategSelectScreen({super.key});
@@ -24,7 +28,7 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
     searchForCategories();
   }
 
-  Widget loadCategories() {
+  Widget _loadCategories() {
     if (categListIsEmpty) return const SizedBox(height: 20);
     return FutureBuilder<List<Categ>?>(
       future: CategPreferencesService.get(),
@@ -32,22 +36,113 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          return Text('Ocorreu um erro ao carregar as categorias: ${snapshot.error}');
+          return Text(
+              'Ocorreu um erro ao carregar as categorias: ${snapshot.error}');
         } else if (snapshot.hasData) {
-          ListView.builder(
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                leading: Image.asset(snapshot.data![index].imgPath!),
-                title: Text(snapshot.data![index].title),
-                subtitle: Text(snapshot.data![index].description!),
-                onTap: () => MaterialPageRoute(
-                  builder: (context) => ItemListScreen(categ: snapshot.data![index].title)),
-              );
-            },
-          );
+          _categoriesList(snapshot.data);
         }
         return const SizedBox(height: 20);
+      },
+    );
+  }
+
+  Widget _categoriesList(List<Categ>? categList) {
+    return ListView.builder(
+      itemCount: categList!.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          leading: Image.asset(categList[index].imgPath!),
+          title: Text(categList[index].title),
+          subtitle: Text(categList[index].description!),
+          onLongPress: () => _selectedCategOptions(categList[index]),
+          onTap: () => MaterialPageRoute(
+              builder: (context) =>
+                  ItemListScreen(categ: categList[index].title)),
+        );
+      },
+    );
+  }
+
+  void _selectedCategOptions(Categ categ) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          child: Row(
+            children: <Widget>[
+              ElevatedButton(
+                onPressed: () => MaterialPageRoute(
+                    builder: (context) => CategFormScreen(categ: categ)),
+                child: const Column(
+                  children: <Widget>[Icon(Icons.delete), Text("Deletar")],
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () => _confirmDelete(categ),
+                child: const Column(
+                  children: <Widget>[Icon(Icons.delete), Text("Deletar")],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _confirmDelete(Categ categ) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            "Excluir Categoria",
+            style: TextStyle(
+              fontSize: 20,
+              // color: ,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          content: Text(
+            "Tem certeza de que deseja excluir esta categoria?",
+            style: TextStyle(
+              fontSize: 16,
+              // color: ,
+            ),
+          ),
+          actions: <Widget>[
+            // Opcão: Cancelar
+            TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(ThemeColors.neutral),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                return;
+              },
+              child: const Text(
+                "Cancelar",
+                style: TextStyle(fontSize: 15),
+              ),
+            ),
+            // Opção: Excluir
+            TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(ThemeColors.cancel),
+              ),
+              onPressed: () {
+                setState(() {
+                  CategController.delete(categ);
+                });
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "Excluir",
+                style: TextStyle(fontSize: 15),
+              ),
+            ),
+          ],
+        );
       },
     );
   }
@@ -64,14 +159,18 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
             },
             child: const Text("Todos os Produtos"),
           ),
-          loadCategories(),
+          _loadCategories(),
           // create Categ TileList
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              MaterialPageRoute(
+                  builder: (context) => const CategFormScreen(categ: null));
+            },
             child: const Text("Nova Categoria"),
           ),
         ],
       ),
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }
