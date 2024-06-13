@@ -1,11 +1,20 @@
 import 'package:marketlist/models/categ.dart';
+import 'package:marketlist/services/categ_shared_preferences.dart';
 
 class CategController {
-  final List<Categ>? savedCategories;
+  static List<Categ>? savedCategories;
 
-  const CategController({required this.savedCategories});
+  const CategController();
 
-  bool categIsRegistered(String title) {
+    static Future<void> getData() async {
+    savedCategories = await CategPreferencesService.get();
+  }
+
+  static Future<void> setData() async {
+    await CategPreferencesService.save(savedCategories!);
+  }
+
+  static bool categIsRegistered(String title) {
     if (savedCategories!.isEmpty || savedCategories == null) return false;
     for (int i = 0; i < savedCategories!.length; i++) {
       if (savedCategories![i].title == title) return true;
@@ -15,13 +24,19 @@ class CategController {
 
   // Get is implemented implicitly through FutureBuilder
 
-  // Insert is implemented directly through list.Add(Categ newCateg);
+  static void insert(Categ categ) {
+    savedCategories!.add(categ);
+    setData();
+  }
 
-  void updateCateg(Categ categOld, String title, String description, String imgPath) {
+  static void update(Categ categOld, String title, String description, String imgPath) {
     Categ categNew = Categ(title: title, description: description, imgPath: imgPath);
     int index = savedCategories!.indexOf(categOld);
     savedCategories![index] = categNew;
   }
 
-  // Delete is implemented directly through list.Remove(Categ oldCateg);
+   static void delete(Categ categ) {
+    savedCategories!.remove(categ);
+    setData();
+  }
 }
