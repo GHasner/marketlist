@@ -10,6 +10,35 @@ import 'package:marketlist/services/navigationState_shared_preferences.dart';
 import 'package:marketlist/src/shared/themes/colors.dart';
 
 class FormValidations {
+  static List<String> invalidTitlePartials = [
+    'titleEmpty',
+    'tooLong',
+    'invalidChars',
+    'titleInvalid'
+  ];
+
+  static String titlePartialValidation(String? title) {
+    if (title == null || title == "") {
+      return "titleEmpty";
+    }
+    // Reserved titles for validations
+    if (invalidTitlePartials.contains(title)) {
+      return "titleInvalid";
+    }
+    // Check for special caracters
+    String titlePartial = title.replaceAll(" ", "").toLowerCase();
+    RegExp regexPortugues = RegExp(r'[A-Za-záàãéÉêíìÍÌóÓôõç]');
+    if (titlePartial.replaceAll(regexPortugues, "") != "") {
+      return "invalidChars";
+    }
+    // Check length
+    if (title.length > 30) {
+      return "tooLong";
+    }
+    // Return resumed form to continue validations
+    return titlePartial;
+  }
+
   static bool categAltered(
       Categ categ, String title, String? description, bool imgAltered) {
     if (imgAltered) return true;
@@ -65,10 +94,9 @@ class FormValidations {
 
   static Future<bool> compareFiles(
       BuildContext context, String file1Path, String file2Path) async {
-    final file1 = File(file1Path);
-    final file2 = File(file2Path);
-
     try {
+      final file1 = File(file1Path);
+      final file2 = File(file2Path);
       final dataFile1 = await file1.readAsBytes();
       final dataFile2 = await file2.readAsBytes();
 
