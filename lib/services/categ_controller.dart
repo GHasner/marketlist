@@ -6,7 +6,7 @@ class CategController {
 
   const CategController();
 
-    static Future<void> getData() async {
+  static Future<void> getData() async {
     savedCategories = await CategPreferencesService.get();
   }
 
@@ -29,14 +29,26 @@ class CategController {
     setData();
   }
 
-  static void update(Categ categOld, String title, String description, String imgPath) {
-    Categ categNew = Categ(title: title, description: description, imgPath: imgPath);
+  static void update(
+      Categ categOld, String title, String description, String imgPath) {
+    Categ categNew =
+        Categ(title: title, description: description, imgPath: imgPath);
     int index = savedCategories!.indexOf(categOld);
     savedCategories![index] = categNew;
   }
 
-   static void delete(Categ categ) {
+  static void delete(Categ categ) {
     savedCategories!.remove(categ);
     setData();
+  }
+
+  static Categ? search(String title) {
+    if (savedCategories != null) {
+      int index = savedCategories!.indexWhere((x) => x.title == title);
+      if (index != -1) {
+        return savedCategories![index];
+      }
+    }
+    return null;
   }
 }

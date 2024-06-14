@@ -21,14 +21,12 @@ class _MarketListScreenState extends State<MarketListScreen> {
   }
 
   Widget _marketList() {
-    if(_shopCart == null || _shopCart!.isEmpty) {
+    if (_shopCart == null || _shopCart!.isEmpty) {
       return const Text("Sua lista de compras está vazia.");
     } else {
       return ListView.builder(
-        itemCount: _shopCart!.length,        
-        itemBuilder: (context, index) {
-          
-        },
+        itemCount: _shopCart!.length,
+        itemBuilder: (context, index) {},
       );
     }
   }

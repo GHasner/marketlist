@@ -17,9 +17,10 @@ class ItemController {
   }
 
   static void filterByCateg(String categTitle) {
-    filteredItems = savedItems!.where((item) => item.categ == categTitle).toList();
+    filteredItems =
+        savedItems!.where((item) => item.categ == categTitle).toList();
   }
-  
+
   static void removeFilter() {
     filteredItems = savedItems;
   }
@@ -43,12 +44,23 @@ class ItemController {
 
   static void updateQnt(Item item, int alt) {
     int newQnt = item.quant + alt;
-    Item updatedItem = Item(categ: item.categ, title: item.title, price: item.price, quant: newQnt);
+    Item updatedItem = Item(
+        categ: item.categ, title: item.title, price: item.price, quant: newQnt);
     update(item, updatedItem);
   }
 
   static void delete(Item item) {
     savedItems!.remove(item);
     setData();
+  }
+
+  static Item? search(String title) {
+    if (savedItems != null) {
+      int index = savedItems!.indexWhere((x) => x.title == title);
+      if (index != -1) {
+        return savedItems![index];
+      }
+    }
+    return null;
   }
 }

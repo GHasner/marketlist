@@ -2,12 +2,45 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:marketlist/models/categ.dart';
+import 'package:marketlist/models/item.dart';
 import 'package:marketlist/pages/categ_selection.dart';
 import 'package:marketlist/pages/item_list.dart';
 import 'package:marketlist/services/navigationState_shared_preferences.dart';
 import 'package:marketlist/src/shared/themes/colors.dart';
 
 class FormValidations {
+  static bool categAltered(
+      Categ categ, String title, String? description, bool imgAltered) {
+    if (imgAltered) return true;
+    if (categ.title == title) {
+      if (categ.description == description) {
+        return false;
+      } else if (categ.description == null ||
+          categ.description == "" && description == null ||
+          description == "") {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  static bool itemAltered(Item item, String title, String? description,
+      double price, bool imgAltered) {
+    if (imgAltered) return true;
+    if (item.title == title) {
+      bool descriptionVerif1 = item.description == description;
+      bool descriptionVerif2 = (item.description == null && description == "");
+      bool descriptionVerif3 = (item.description == "" && description == null);
+      if (descriptionVerif1 || descriptionVerif2 || descriptionVerif3) {
+        if (item.price.toStringAsFixed(2) == price.toStringAsFixed(2)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   static Future<File?> pickImage(BuildContext context) async {
     try {
       final pickedFile =
