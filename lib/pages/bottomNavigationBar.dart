@@ -21,7 +21,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
     if (_tabSelected == 'list') {
       _selectedIndex = 1;
     } else {
-      setState(() { // Remover setState
+      setState(() {
+        // Remover setState
         _selectedIndex = 0;
       });
     }
@@ -31,20 +32,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     switch (index) {
       case 0:
         await NavigationStateSharedPreferences.savePageState("products");
-        String? productsPageState =
-            await NavigationStateSharedPreferences.getProductPageState();
-        if (productsPageState == "notSelected") {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const CategSelectScreen()));
-        } else {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      ItemListScreen(categ: productsPageState!)));
-        }
+        PreviousPageRedirect.redirectProductPage(context);
         break;
       case 1:
         await NavigationStateSharedPreferences.savePageState("list");
@@ -65,7 +53,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
     return BottomNavigationBar(
       currentIndex: _selectedIndex,
       onTap: (index) {
-        setState(() { // Remover setState
+        setState(() {
+          // Remover setState
           _selectedIndex = index;
           setPageState(index);
         });

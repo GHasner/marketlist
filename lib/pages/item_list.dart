@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:marketlist/models/item.dart';
 import 'package:marketlist/pages/bottomNavigationBar.dart';
 import 'package:marketlist/pages/item_form.dart';
+import 'package:marketlist/services/form_controller.dart';
 import 'package:marketlist/services/item_controller.dart';
 import 'package:marketlist/services/navigationState_shared_preferences.dart';
 import 'package:marketlist/src/shared/themes/colors.dart';
-
-// Se categ = "" exibe todas os produtos
 
 class ItemListScreen extends StatefulWidget {
   final String categ;
@@ -80,94 +79,27 @@ class _ItemListScreenState extends State<ItemListScreen> {
               ),
             ],
           ),
-          onLongPress: () => _selectedItemOptions(ItemController.filteredItems![index]),
+          onLongPress: () =>
+              _selectedItemOptions(ItemController.filteredItems![index]),
         );
       },
     );
   }
 
   void _selectedItemOptions(Item item) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Container(
-          child: Row(
-            children: <Widget>[
-              ElevatedButton(
-                onPressed: () => MaterialPageRoute(
-                    builder: (context) => ItemFormScreen(item: item)),
-                child: const Column(
-                  children: <Widget>[Icon(Icons.delete), Text("Deletar")],
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () => _confirmDelete(item),
-                child: const Column(
-                  children: <Widget>[Icon(Icons.delete), Text("Deletar")],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  void _confirmDelete(Item item) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(
-            "Excluir Item",
-            style: TextStyle(
-              fontSize: 20,
-              // color: ,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          content: Text(
-            "Tem certeza de que deseja excluir este item?",
-            style: TextStyle(
-              fontSize: 16,
-              // color: ,
-            ),
-          ),
-          actions: <Widget>[
-            // Opcão: Cancelar
-            TextButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(ThemeColors.neutral),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                return;
-              },
-              child: const Text(
-                "Cancelar",
-                style: TextStyle(fontSize: 15),
-              ),
-            ),
-            // Opção: Excluir
-            TextButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(ThemeColors.cancel),
-              ),
-              onPressed: () {
-                setState(() {
-                  ItemController.delete(item);
-                  _searchForItems();
-                });
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                "Excluir",
-                style: TextStyle(fontSize: 15),
-              ),
-            ),
-          ],
-        );
-      },
+    CustomPopUps.editDeleteModal(
+      context,
+      MaterialPageRoute(builder: (context) => ItemFormScreen(item: item)),
+      CustomPopUps.dialog(
+        context,
+        "deleteItem",
+        "Cancelar",
+        "Excluir",
+        setState(() {
+          ItemController.delete(item);
+          _searchForItems();
+        }),
+      ),
     );
   }
 
