@@ -1,5 +1,6 @@
 import 'package:marketlist/models/categ.dart';
 import 'package:marketlist/services/categ_shared_preferences.dart';
+import 'package:marketlist/services/form_controller.dart';
 
 class CategController {
   static List<Categ>? savedCategories;
@@ -49,6 +50,36 @@ class CategController {
         return savedCategories![index];
       }
     }
+    return null;
+  }
+
+  static String? searchAlike(String? title, Categ? edited) {
+    // Verifica se a lista está vazia
+    if (savedCategories != null && savedCategories!.length > 1) {
+      // Senão estiver vazia busca por títulos semelhantes (correspondentes ao tirar espaços brancos e maiúsculas)
+      String titleSimplified = FormValidations.titlePartialValidation(title);
+      // Faz a primeira validação do Form para ver se o título é válido
+      if (FormValidations.invalidTitlePartials.contains(titleSimplified)) {
+        // Senão for retorna o tipo de invalidez
+        return titleSimplified;
+      }
+
+      int index = savedCategories!.indexWhere(
+          (x) => x.title.replaceAll(" ", "").toLowerCase() == titleSimplified);
+      if (index != -1) {
+        // Se achar uma correspondência retornaria o index em String
+        if (edited != null) {
+          // Mas se Categ? edited != null, a correspondência pode ser igual à categoria editada, retornando 'editOverride'
+          if (edited.title.replaceAll(" ", "").toLowerCase() ==
+              titleSimplified) {
+            return "editOverride";
+          }
+        }
+        return savedCategories![index].toString();
+      }
+      return "notRegistered";
+    }
+    // Se a lista estiver vazia retorna null
     return null;
   }
 }

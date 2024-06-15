@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:marketlist/models/categ.dart';
 import 'package:marketlist/models/item.dart';
-import 'package:marketlist/pages/categ_selection.dart';
-import 'package:marketlist/pages/item_list.dart';
 import 'package:marketlist/services/navigationState_shared_preferences.dart';
 import 'package:marketlist/src/shared/themes/colors.dart';
 
@@ -14,7 +12,9 @@ class FormValidations {
     'titleEmpty',
     'tooLong',
     'invalidChars',
-    'titleInvalid'
+    'titleInvalid',
+    'editOverride',
+    'notRegistered'
   ];
 
   static String titlePartialValidation(String? title) {

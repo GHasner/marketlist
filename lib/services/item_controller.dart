@@ -1,4 +1,5 @@
 import 'package:marketlist/models/item.dart';
+import 'package:marketlist/services/form_controller.dart';
 import 'package:marketlist/services/item_shared_preferences.dart';
 
 class ItemController {
@@ -61,6 +62,36 @@ class ItemController {
         return savedItems![index];
       }
     }
+    return null;
+  }
+
+  static String? searchAlike(String? title, Item? edited) {
+    // Verifica se a lista está vazia
+    if (savedItems != null && savedItems!.length > 1) {
+      // Senão estiver vazia busca por títulos semelhantes (correspondentes ao tirar espaços brancos e maiúsculas)
+      String titleSimplified = FormValidations.titlePartialValidation(title);
+      // Faz a primeira validação do Form para ver se o título é válido
+      if (FormValidations.invalidTitlePartials.contains(titleSimplified)) {
+        // Senão for retorna o tipo de invalidez
+        return titleSimplified;
+      }
+
+      int index = savedItems!.indexWhere(
+          (x) => x.title.replaceAll(" ", "").toLowerCase() == titleSimplified);
+      if (index != -1) {
+        // Se achar uma correspondência retornaria o index em String
+        if (edited != null) {
+          // Mas se Item? edited != null, a correspondência pode ser igual ao item editado, retornando 'editOverride'
+          if (edited.title.replaceAll(" ", "").toLowerCase() ==
+              titleSimplified) {
+            return "editOverride";
+          }
+        }
+        return savedItems![index].toString();
+      }
+      return "notRegistered";
+    }
+    // Se a lista estiver vazia retorna null
     return null;
   }
 }

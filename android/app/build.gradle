@@ -28,12 +28,12 @@ android {
     ndkVersion flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_15
+        targetCompatibility JavaVersion.VERSION_15
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '15'
     }
 
     sourceSets {
@@ -60,7 +60,6 @@ android {
     }
 
     configurations {
-        all*.exclude group: 'com.google.guava', module: 'listenablefuture'
     }
 }
 
@@ -68,4 +67,13 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.contraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.concurrent:concurrent-futures:1.1.0'
+    implementation 'androidx.profileinstaller:profileinstaller:1.2.0'
+    implementation 'com.google.guava:guava:30.1-android'
+}
