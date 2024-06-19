@@ -39,21 +39,6 @@ class FormValidations {
     return titlePartial;
   }
 
-  static bool categAltered(
-      Categ categ, String title, String? description, bool imgAltered) {
-    if (imgAltered) return true;
-    if (categ.title == title) {
-      if (categ.description == description) {
-        return false;
-      } else if (categ.description == null ||
-          categ.description == "" && description == null ||
-          description == "") {
-        return false;
-      }
-    }
-    return true;
-  }
-
   static bool itemAltered(Item item, String title, String? description,
       double price, bool imgAltered) {
     if (imgAltered) return true;
@@ -178,12 +163,12 @@ class FormFields {
   }
 
   static Widget confirmButtons(
-      BuildContext context, bool altered, void function) {
+      BuildContext context, Future<bool> altered, void function) {
     return Row(
       children: <Widget>[
         ElevatedButton(
           onPressed: () async {
-            if (!altered) {
+            if (!(await altered)) {
               PreviousPageRedirect.redirectProductPage(context);
             } else {
               CustomPopUps.dialog(
@@ -199,7 +184,11 @@ class FormFields {
         ),
         const SizedBox(width: 20),
         ElevatedButton(
-          onPressed: () => function,
+          onPressed: () async {
+            if(await altered) {
+              function;
+            }
+          },
           child: const Text("Salvar"),
         ),
       ],
@@ -213,23 +202,21 @@ class CustomPopUps {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Container(
-          child: Row(
-            children: <Widget>[
-              ElevatedButton(
-                onPressed: () => redirectEdit,
-                child: const Column(
-                  children: <Widget>[Icon(Icons.edit), Text("Editar")],
-                ),
+        return Row(
+          children: <Widget>[
+            ElevatedButton(
+              onPressed: () => redirectEdit,
+              child: const Column(
+                children: <Widget>[Icon(Icons.edit), Text("Editar")],
               ),
-              ElevatedButton(
-                onPressed: () => deleteDialog,
-                child: const Column(
-                  children: <Widget>[Icon(Icons.delete), Text("Deletar")],
-                ),
+            ),
+            ElevatedButton(
+              onPressed: () => deleteDialog,
+              child: const Column(
+                children: <Widget>[Icon(Icons.delete), Text("Deletar")],
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );
@@ -257,7 +244,7 @@ class CustomPopUps {
     if (title != "") {
       dialogTitle = Text(
         title,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 20,
           // color: ,
           fontWeight: FontWeight.w600,
@@ -272,7 +259,7 @@ class CustomPopUps {
           title: dialogTitle,
           content: Text(
             content,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
               // color: ,
             ),
@@ -289,7 +276,7 @@ class CustomPopUps {
               },
               child: Text(
                 cancel,
-                style: TextStyle(fontSize: 15),
+                style: const TextStyle(fontSize: 15),
               ),
             ),
             // Opção: Confirmar ação
@@ -303,7 +290,7 @@ class CustomPopUps {
               },
               child: Text(
                 confirm,
-                style: TextStyle(fontSize: 15),
+                style: const TextStyle(fontSize: 15),
               ),
             ),
           ],
