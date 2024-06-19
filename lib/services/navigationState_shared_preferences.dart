@@ -1,7 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:marketlist/pages/categ_selection.dart';
 import 'package:marketlist/pages/item_list.dart';
