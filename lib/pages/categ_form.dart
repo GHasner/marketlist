@@ -3,7 +3,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:marketlist/models/categ.dart';
-import 'package:marketlist/services/categ_controller.dart';
 import 'package:marketlist/services/form_controller.dart';
 
 class CategFormScreen extends StatefulWidget {
@@ -20,7 +19,7 @@ class _CategFormScreenState extends State<CategFormScreen> {
   late bool _newCateg;
   String _refTitle = "Nova Categoria";
 
-  String _imgPath = Directory.current.path + "assets/images/saved/";
+  String _imgPath = "${Directory.current.path}assets/images/saved/";
   File? _image;
   final TextEditingController _title = TextEditingController();
   final TextEditingController _description = TextEditingController();

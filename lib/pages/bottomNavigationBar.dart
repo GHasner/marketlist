@@ -1,7 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
-import 'package:marketlist/pages/categ_selection.dart';
-import 'package:marketlist/pages/item_list.dart';
 import 'package:marketlist/pages/market_list.dart';
 import 'package:marketlist/services/navigationState_shared_preferences.dart';
 

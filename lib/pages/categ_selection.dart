@@ -7,7 +7,6 @@ import 'package:marketlist/services/categ_controller.dart';
 import 'package:marketlist/services/categ_shared_preferences.dart';
 import 'package:marketlist/services/form_controller.dart';
 import 'package:marketlist/services/navigationState_shared_preferences.dart';
-import 'package:marketlist/src/shared/themes/colors.dart';
 
 class CategSelectScreen extends StatefulWidget {
   const CategSelectScreen({super.key});
@@ -25,10 +24,10 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
 
   @override
   void initState() {
-    super.initState();
-
     NavigationStateSharedPreferences.saveProductPageState('notSelected');
     searchForCategories();
+
+    super.initState();
   }
 
   Widget _loadCategories() {

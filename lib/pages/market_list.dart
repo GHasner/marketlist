@@ -15,9 +15,10 @@ class _MarketListScreenState extends State<MarketListScreen> {
 
   @override
   void initState() {
-    super.initState();
     ItemController.refreshMarketList();
     _shopCart = ItemController.shopCart;
+
+    super.initState();
   }
 
   Widget _marketList() {
@@ -26,7 +27,9 @@ class _MarketListScreenState extends State<MarketListScreen> {
     } else {
       return ListView.builder(
         itemCount: _shopCart!.length,
-        itemBuilder: (context, index) {},
+        itemBuilder: (context, index) {
+          return null;
+        },
       );
     }
   }

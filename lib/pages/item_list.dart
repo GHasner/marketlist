@@ -5,7 +5,6 @@ import 'package:marketlist/pages/item_form.dart';
 import 'package:marketlist/services/form_controller.dart';
 import 'package:marketlist/services/item_controller.dart';
 import 'package:marketlist/services/navigationState_shared_preferences.dart';
-import 'package:marketlist/src/shared/themes/colors.dart';
 
 class ItemListScreen extends StatefulWidget {
   final String categ;
@@ -50,10 +49,11 @@ class _ItemListScreenState extends State<ItemListScreen> {
 
   @override
   void initState() {
-    super.initState();
     NavigationStateSharedPreferences.saveProductPageState(_selection);
     _searchForItems();
     _getStrings();
+    
+    super.initState();
   }
 
   Widget _loadItems() {

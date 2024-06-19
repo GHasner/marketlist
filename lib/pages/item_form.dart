@@ -19,7 +19,7 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
   late bool _newItem;
   String _refTitle = "Novo Item";
 
-  String _imgPath = Directory.current.path + "assets/images/saved/";
+  String _imgPath = "${Directory.current.path}assets/images/saved/";
   File? _image;
   final TextEditingController _title = TextEditingController();
   final TextEditingController _price = TextEditingController();
@@ -37,10 +37,11 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
 
   @override
   void initState() {
-    super.initState();
     // Se item == null ADD Else EDIT
     _newItem = _item == null;
     _initForm(_newItem);
+    
+    super.initState();
   }
 
   Widget _form() {
