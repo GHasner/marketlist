@@ -16,7 +16,7 @@ class CategSelectScreen extends StatefulWidget {
 }
 
 class _CategSelectScreenState extends State<CategSelectScreen> {
-  late bool categListIsEmpty;
+  bool categListIsEmpty = true;
 
   Future<void> searchForCategories() async {
     categListIsEmpty = await CategPreferencesService.get() == [];
@@ -24,10 +24,10 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
 
   @override
   void initState() {
+    super.initState();
+
     NavigationStateSharedPreferences.saveProductPageState('notSelected');
     searchForCategories();
-
-    super.initState();
   }
 
   Widget _loadCategories() {
@@ -57,9 +57,9 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
           title: Text(categList[index].title),
           subtitle: Text(categList[index].description!),
           onLongPress: () => _selectedCategOptions(categList[index]),
-          onTap: () => MaterialPageRoute(
+          onTap: () => Navigator.push(context, MaterialPageRoute(
               builder: (context) =>
-                  ItemListScreen(categ: categList[index].title)),
+                  ItemListScreen(categ: categList[index].title))),
         );
       },
     );
@@ -68,7 +68,7 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
   void _selectedCategOptions(Categ categ) {
     CustomPopUps.editDeleteModal(
       context,
-      MaterialPageRoute(builder: (context) => CategFormScreen(categ: categ)),
+      Navigator.push(context, MaterialPageRoute(builder: (context) => CategFormScreen(categ: categ))),
       CustomPopUps.dialog(
         context,
         "deleteCateg",
@@ -88,20 +88,24 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
       body: Column(
         children: <Widget>[
           ElevatedButton(
-            onPressed: () {
-              MaterialPageRoute(
-                  builder: (context) => const ItemListScreen(categ: ''));
-            },
             child: const Text("Todos os Produtos"),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ItemListScreen(categ: '')));
+            },
           ),
           _loadCategories(),
           // create Categ TileList
           ElevatedButton(
-            onPressed: () {
-              MaterialPageRoute(
-                  builder: (context) => const CategFormScreen(categ: null));
-            },
             child: const Text("Nova Categoria"),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CategFormScreen(categ: null)));
+            },
           ),
         ],
       ),

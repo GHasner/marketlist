@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:marketlist/models/categ.dart';
+import 'package:marketlist/services/categ_controller.dart';
 import 'package:marketlist/services/form_controller.dart';
 
 class CategFormScreen extends StatefulWidget {
@@ -52,9 +53,16 @@ class _CategFormScreenState extends State<CategFormScreen> {
         FormFields.label('Imagem *'),
         GestureDetector(
           child: FormFields.imagePlaceholder(_image),
-          onTap: () async {
-            _image = await FormValidations.pickImage(context);
+          onTap: () {
+            setState(() async {
+              _image = await FormValidations.pickImage(context);              
+            });
           },
+        ),
+        FormFields.confirmButtons(
+          context,
+          _checkForAlterations(),
+          _save(),
         ),
       ],
     );
@@ -66,5 +74,44 @@ class _CategFormScreenState extends State<CategFormScreen> {
       appBar: AppBar(title: Text(_refTitle)),
       body: _form(),
     );
+  }
+
+  Future<bool> _checkForAlterations() async {
+    if (_categ == null) {
+      if (_title.text != "") return true;
+      if (_description.text != "") return true;
+      if (_image != null) return true;
+      return false;
+    } else {
+      if (_title.text != _categ!.title) return true;
+      if (_description.text != _categ!.description) return true;
+      if (_image != null) {
+        Future<bool> sameImg = FormValidations.compareFiles(context, _categ!.imgPath!, _imgPath);
+        if (await sameImg) return true;
+      }
+      return false;
+    }
+  }
+
+  void _save() {
+    String? titleValidation = CategController.searchAlike(_title.text, _categ);
+    switch (titleValidation) {
+      case 'titleEmpty': // ERRO: Título Inválido
+        break;
+      case 'tooLong': // ERRO: Título Inválido
+        break;
+      case 'invalidChars': // ERRO: Título Inválido
+        break;
+      case 'titleInvalid': // ERRO: Título Inválido
+        break;
+      case 'editOverride': // PASS: Resulta em update de _categ
+        break;
+      case 'notRegistered': // PASS: Título não registrado
+        break;
+      case null: // PASS: Nenhum registro, lista vazia
+        break;
+      default:
+        break;
+    }
   }
 }
