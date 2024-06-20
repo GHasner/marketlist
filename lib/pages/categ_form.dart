@@ -3,8 +3,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:marketlist/models/categ.dart';
+import 'package:marketlist/pages/widgets/form_fields.dart';
 import 'package:marketlist/services/categ_controller.dart';
-import 'package:marketlist/services/form_controller.dart';
+import 'package:marketlist/services/emulator_API.dart';
+import 'package:marketlist/services/file_controller.dart';
 
 class CategFormScreen extends StatefulWidget {
   final Categ? categ;
@@ -55,7 +57,7 @@ class _CategFormScreenState extends State<CategFormScreen> {
           child: FormFields.imagePlaceholder(_image),
           onTap: () {
             setState(() async {
-              _image = await FormValidations.pickImage(context);              
+              _image = await EmulatorAPI.pickImage(context);              
             });
           },
         ),
@@ -86,7 +88,7 @@ class _CategFormScreenState extends State<CategFormScreen> {
       if (_title.text != _categ!.title) return true;
       if (_description.text != _categ!.description) return true;
       if (_image != null) {
-        Future<bool> sameImg = FormValidations.compareFiles(context, _categ!.imgPath!, _imgPath);
+        Future<bool> sameImg = FileController.compareFiles(context, _categ!.imgPath!, _image!);
         if (await sameImg) return true;
       }
       return false;
@@ -97,13 +99,24 @@ class _CategFormScreenState extends State<CategFormScreen> {
     String? titleValidation = CategController.searchAlike(_title.text, _categ);
     switch (titleValidation) {
       case 'titleEmpty': // ERRO: Título Inválido
-        break;
+        return;
       case 'tooLong': // ERRO: Título Inválido
-        break;
+        return;
       case 'invalidChars': // ERRO: Título Inválido
-        break;
+        return;
       case 'titleInvalid': // ERRO: Título Inválido
-        break;
+        return;
+    }
+
+    if (_categ != null) {
+      // Caso seja EDIT remove a instancial salva
+      CategController.delete(_categ!);
+    }
+    // Adiciona nova categoria
+    Categ _newCateg = Categ(title: _title.text, description: _description.text, imgPath: _imgPath);
+    CategController.insert(_newCateg);
+
+    switch (titleValidation) {
       case 'editOverride': // PASS: Resulta em update de _categ
         break;
       case 'notRegistered': // PASS: Título não registrado
@@ -112,6 +125,6 @@ class _CategFormScreenState extends State<CategFormScreen> {
         break;
       default:
         break;
-    }
+    }    
   }
 }

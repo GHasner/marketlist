@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:marketlist/models/item.dart';
 import 'package:marketlist/pages/bottomNavigationBar.dart';
 import 'package:marketlist/pages/item_form.dart';
-import 'package:marketlist/services/form_controller.dart';
+import 'package:marketlist/pages/widgets/form_fields.dart';
 import 'package:marketlist/services/item_controller.dart';
 import 'package:marketlist/services/navigationState_shared_preferences.dart';
 
@@ -49,11 +49,10 @@ class _ItemListScreenState extends State<ItemListScreen> {
 
   @override
   void initState() {
+    super.initState();
     NavigationStateSharedPreferences.saveProductPageState(_selection);
     _searchForItems();
     _getStrings();
-    
-    super.initState();
   }
 
   Widget _loadItems() {

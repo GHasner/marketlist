@@ -15,10 +15,9 @@ class _MarketListScreenState extends State<MarketListScreen> {
 
   @override
   void initState() {
+    super.initState();
     ItemController.refreshMarketList();
     _shopCart = ItemController.shopCart;
-
-    super.initState();
   }
 
   Widget _marketList() {

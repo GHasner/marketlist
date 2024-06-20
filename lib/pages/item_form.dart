@@ -2,7 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:marketlist/models/item.dart';
-import 'package:marketlist/services/form_controller.dart';
+import 'package:marketlist/pages/widgets/form_fields.dart';
+import 'package:marketlist/services/emulator_API.dart';
 
 class ItemFormScreen extends StatefulWidget {
   final Item? item;
@@ -37,11 +38,10 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
 
   @override
   void initState() {
+    super.initState();
     // Se item == null ADD Else EDIT
     _newItem = _item == null;
     _initForm(_newItem);
-    
-    super.initState();
   }
 
   Widget _form() {
@@ -57,7 +57,7 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
         GestureDetector(
           child: FormFields.imagePlaceholder(_image),
           onTap: () async {
-            _image = await FormValidations.pickImage(context);
+            _image = await EmulatorAPI.pickImage(context);
           },
         ),
       ],
