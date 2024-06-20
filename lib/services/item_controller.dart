@@ -1,4 +1,5 @@
 import 'package:marketlist/models/item.dart';
+import 'package:marketlist/services/file_controller.dart';
 import 'package:marketlist/services/form_controller.dart';
 import 'package:marketlist/services/item_shared_preferences.dart';
 
@@ -48,6 +49,31 @@ class ItemController {
     Item updatedItem = Item(
         categ: item.categ, title: item.title, price: item.price, quant: newQnt);
     update(item, updatedItem);
+  }
+
+  static void updateCateg(String categOld, String categNew) {
+    if (savedItems != null) {
+      String categOldSimplified = categOld.replaceAll(' ', '').toLowerCase();
+      String categNewSimplified = categNew.replaceAll(' ', '').toLowerCase();
+      bool changeImgName = categOldSimplified != categNewSimplified;
+      for (int i = 0; i < savedItems!.length; i++) { // Percorre toda a lista
+        if (savedItems![i].categ.replaceAll(' ', '').toLowerCase() == categOldSimplified) { // Encontra itens salvos sob a categoria antiga
+          String newImgPathName;
+          if (changeImgName) { // Altera o nome dos arquivos de imagem
+            newImgPathName = categNewSimplified + savedItems![i].imgPath!.split(categOldSimplified).first;
+            FileController.rename(savedItems![i].imgPath!, newImgPathName);
+          } else { // Não altera o nome do arquivo de imagem
+            newImgPathName = savedItems![i].imgPath!;
+          }
+          Item updatedItem = Item(categ: categOld, title: savedItems![i].title, description: savedItems![i].description, price: savedItems![i].price, quant: savedItems![i].quant, imgPath: newImgPathName);
+          savedItems![i] = updatedItem;
+        }
+      }
+      bool update = savedItems!.any((x) => x.categ == categOld);
+      if (update) {
+        setData();
+      }
+    }
   }
 
   static void delete(Item item) {
