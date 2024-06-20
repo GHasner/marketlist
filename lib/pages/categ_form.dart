@@ -8,6 +8,7 @@ import 'package:marketlist/pages/widgets/form_fields.dart';
 import 'package:marketlist/services/categ_controller.dart';
 import 'package:marketlist/services/emulator_API.dart';
 import 'package:marketlist/services/file_controller.dart';
+import 'package:marketlist/services/item_controller.dart';
 
 class CategFormScreen extends StatefulWidget {
   final Categ? categ;
@@ -132,17 +133,17 @@ class _CategFormScreenState extends State<CategFormScreen> {
       FileController.save(_image!, _imgPath);
     }
 
-    // Salva categoria
+    // Salva alterações
     if (_categ != null) {
       // Caso seja EDIT remove a instancial salva
       CategController.delete(_categ!);
+      // Fazer alterações para itens da categoria editada
+      ItemController.updateCateg(_categ!.title, _title.text);
     }
     // Adiciona nova categoria
     Categ newCateg = Categ(title: _title.text, description: _description.text, imgPath: _imgPath);
     CategController.insert(newCateg);
 
-    // Fazer alterações para itens da categoria editada
-    
     switch (titleValidation) {
       case 'editOverride': // PASS: Resulta em update de _categ
         break;
