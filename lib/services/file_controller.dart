@@ -9,17 +9,17 @@ class FileController {
   static String directory = '${Directory.current.path}/';
   static const String imgsPath = 'assets/images/saved/';
 
-  Future<void> save(File arquivo, String nomeArquivo) async {
+  static Future<void> save(File arquivo, String nomeArquivo) async {
     final pathImagem = '$directory$imgsPath$nomeArquivo';
     await arquivo.copy(pathImagem);
   }
 
-  Future<void> delete(String nomeArmazenamento) async {
+  static Future<void> delete(String nomeArmazenamento) async {
     File arquivo = File('$directory$imgsPath$nomeArmazenamento');
     await arquivo.delete();
   }
 
-  Future<void> rename(String nomeArmazenamento, String novoNome) async {
+  static Future<void> rename(String nomeArmazenamento, String novoNome) async {
     File arquivo = File('$directory$imgsPath$nomeArmazenamento');
     await arquivo.rename('$directory$imgsPath$novoNome');
   }
