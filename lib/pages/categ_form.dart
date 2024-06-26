@@ -42,7 +42,7 @@ class _CategFormScreenState extends State<CategFormScreen> {
   @override
   void initState() {
     super.initState();
-    // Se categ == null ADD Else EDIT 
+    // Se categ == null ADD Else EDIT
     _newCateg = _categ == null;
     _initForm(_newCateg);
   }
@@ -90,7 +90,8 @@ class _CategFormScreenState extends State<CategFormScreen> {
       if (_title.text != _categ!.title) return true;
       if (_description.text != _categ!.description) return true;
       if (_image != null) {
-        Future<bool> sameImg = FileController.compareFiles(context, _categ!.imgPath!, _image!);
+        Future<bool> sameImg =
+            FileController.compareFiles(context, _categ!.imgPath!, _image!);
         if (await sameImg) return true;
       }
       return false;
@@ -115,18 +116,22 @@ class _CategFormScreenState extends State<CategFormScreen> {
     }
 
     // Salva imagem
-    Future<bool> sameImg = FileController.compareFiles(context, _categ!.imgPath!, _image!);
+    Future<bool> sameImg =
+        FileController.compareFiles(context, _categ!.imgPath!, _image!);
     if (await sameImg) {
       if (_categ != null) {
-        if (_categ!.title.replaceAll(" ", "").toLowerCase() != _title.text.replaceAll(" ", "").toLowerCase()) {
-          _imgPath = _title.text.replaceAll(" ", "").toLowerCase() + _image!.path.split('.').last;
+        if (_categ!.title.replaceAll(" ", "").toLowerCase() !=
+            _title.text.replaceAll(" ", "").toLowerCase()) {
+          _imgPath = _title.text.replaceAll(" ", "").toLowerCase() +
+              _image!.path.split('.').last;
           FileController.rename(_categ!.imgPath!, _imgPath);
         } else {
           _imgPath = _categ!.imgPath!;
         }
       }
     } else {
-      _imgPath = _title.text.replaceAll(" ", "").toLowerCase() + _image!.path.split('.').last;
+      _imgPath = _title.text.replaceAll(" ", "").toLowerCase() +
+          _image!.path.split('.').last;
       if (_categ != null) {
         FileController.delete(_categ!.imgPath!);
       }
@@ -141,7 +146,8 @@ class _CategFormScreenState extends State<CategFormScreen> {
       ItemController.updateCateg(_categ!.title, _title.text);
     }
     // Adiciona nova categoria
-    Categ newCateg = Categ(title: _title.text, description: _description.text, imgPath: _imgPath);
+    Categ newCateg = Categ(
+        title: _title.text, description: _description.text, imgPath: _imgPath);
     CategController.insert(newCateg);
 
     switch (titleValidation) {
@@ -151,7 +157,7 @@ class _CategFormScreenState extends State<CategFormScreen> {
         break;
       case null: // PASS: Nenhum registro, lista vazia
         break;
-      default:
+      default: // titleValidation = versão simplificada do site
         break;
     }
 
