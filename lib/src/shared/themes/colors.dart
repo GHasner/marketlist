@@ -25,6 +25,7 @@ class ThemeColors {
   static Color onContainerMedium = const Color.fromARGB(255, 152, 160, 164);
 
   static Color background = const Color.fromARGB(255, 255, 255, 255);
+  static Color backgroundAlt = const Color.fromARGB(255, 252, 252, 252);
   static Color black = const Color.fromARGB(255, 0, 0, 0);
 
   // Other

@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:marketlist/models/categ.dart';
 import 'package:marketlist/pages/categ_selection.dart';
 import 'package:marketlist/pages/widgets/form_fields.dart';
@@ -48,34 +49,55 @@ class _CategFormScreenState extends State<CategFormScreen> {
   }
 
   Widget _form() {
-    return Column(
-      children: <Widget>[
-        FormFields.label('Título *'),
-        FormFields.textField(_title),
-        FormFields.label('Descrição'),
-        FormFields.textField(_description),
-        FormFields.label('Imagem *'),
-        GestureDetector(
-          child: FormFields.imagePlaceholder(_image),
-          onTap: () {
-            setState(() async {
-              _image = await EmulatorAPI.pickImage(context);
-            });
-          },
+    return SingleChildScrollView(
+      child: Center(
+        child: SizedBox(
+          height: 680,
+          width: 340,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  const SizedBox(height: 20), // Padding
+                  FormFields.textField(_title, 'Título', Icons.label_outline),
+                  const SizedBox(height: 14), // Padding
+                  FormFields.textField(
+                      _description, 'Descrição (Opcional)', Icons.short_text),
+                  const SizedBox(height: 14), // Padding
+                  GestureDetector(
+                    child: FormFields.imagePlaceholder(_image),
+                    onTap: () {
+                      setState(() async {
+                        _image = await EmulatorAPI.pickImage(context);
+                      });
+                    },
+                  ),
+                ],
+              ),
+              FormFields.confirmButtons(
+                context,
+                _checkForAlterations(),
+                _save(),
+              ),
+            ],
+          ),
         ),
-        FormFields.confirmButtons(
-          context,
-          _checkForAlterations(),
-          _save(),
-        ),
-      ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(_refTitle)),
+      appBar: AppBar(
+        title: Text(
+          _refTitle,
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
       body: _form(),
     );
   }

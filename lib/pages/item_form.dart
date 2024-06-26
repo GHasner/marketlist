@@ -48,11 +48,12 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
     return Column(
       children: <Widget>[
         FormFields.label('Título *'),
-        FormFields.textField(_title),
+        FormFields.textField(_title, 'Descrição (Opcional)', Icons.short_text),
         FormFields.label('Preço *'),
         _monetaryField(_price),
         FormFields.label('Descrição'),
-        FormFields.textField(_description),
+        FormFields.textField(
+            _description, 'Descrição (Opcional)', Icons.short_text),
         FormFields.label('Imagem *'),
         GestureDetector(
           child: FormFields.imagePlaceholder(_image),
