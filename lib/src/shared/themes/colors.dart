@@ -32,5 +32,5 @@ class ThemeColors {
   static Color lightGrey = const Color.fromARGB(255, 200, 200, 200);
   static Color light = const Color.fromARGB(255, 240, 240, 240);
   static Color cancel = const Color.fromARGB(100, 213, 118, 112);
-  static Color neutral = const Color.fromARGB(100, 177, 177, 177);
+  static Color neutral = const Color.fromARGB(255, 178, 174, 183);
 }

@@ -2,6 +2,8 @@
 import 'package:marketlist/models/item.dart';
 
 class FormValidations {
+  static bool execCallBack = false;
+  
   static List<String> invalidTitlePartials = [
     'titleEmpty',
     'tooLong',

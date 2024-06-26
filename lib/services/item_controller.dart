@@ -4,9 +4,9 @@ import 'package:marketlist/services/form_controller.dart';
 import 'package:marketlist/services/item_shared_preferences.dart';
 
 class ItemController {
-  static List<Item>? savedItems;
-  static List<Item>? filteredItems;
-  static List<Item>? shopCart;
+  static List<Item> savedItems = [];
+  static List<Item> filteredItems = [];
+  static List<Item> shopCart = [];
 
   const ItemController();
 
@@ -20,7 +20,7 @@ class ItemController {
 
   static void filterByCateg(String categTitle) {
     filteredItems =
-        savedItems!.where((item) => item.categ == categTitle).toList();
+        savedItems.where((item) => item.categ == categTitle).toList();
   }
 
   static void removeFilter() {
@@ -28,19 +28,19 @@ class ItemController {
   }
 
   static void refreshMarketList() {
-    shopCart = savedItems!.where((item) => item.quant > 0).toList();
+    shopCart = savedItems.where((item) => item.quant > 0).toList();
   }
 
   // Get is implemented implicitly through FutureBuilder or accessing one of the static lists directly
 
   static void insert(Item item) {
-    savedItems!.add(item);
+    savedItems.add(item);
     setData();
   }
 
   static void update(Item itemOld, Item itemNew) {
-    int index = savedItems!.indexOf(itemOld);
-    savedItems![index] = itemNew;
+    int index = savedItems.indexOf(itemOld);
+    savedItems[index] = itemNew;
     setData();
   }
 
@@ -52,48 +52,56 @@ class ItemController {
   }
 
   static void updateCateg(String categOld, String categNew) {
-    if (savedItems != null) {
-      String categOldSimplified = categOld.replaceAll(' ', '').toLowerCase();
-      String categNewSimplified = categNew.replaceAll(' ', '').toLowerCase();
-      bool changeImgName = categOldSimplified != categNewSimplified;
-      for (int i = 0; i < savedItems!.length; i++) { // Percorre toda a lista
-        if (savedItems![i].categ.replaceAll(' ', '').toLowerCase() == categOldSimplified) { // Encontra itens salvos sob a categoria antiga
-          String newImgPathName;
-          if (changeImgName) { // Altera o nome dos arquivos de imagem
-            newImgPathName = categNewSimplified + savedItems![i].imgPath!.split(categOldSimplified).first;
-            FileController.rename(savedItems![i].imgPath!, newImgPathName);
-          } else { // Não altera o nome do arquivo de imagem
-            newImgPathName = savedItems![i].imgPath!;
-          }
-          Item updatedItem = Item(categ: categOld, title: savedItems![i].title, description: savedItems![i].description, price: savedItems![i].price, quant: savedItems![i].quant, imgPath: newImgPathName);
-          savedItems![i] = updatedItem;
+    String categOldSimplified = categOld.replaceAll(' ', '').toLowerCase();
+    String categNewSimplified = categNew.replaceAll(' ', '').toLowerCase();
+    bool changeImgName = categOldSimplified != categNewSimplified;
+    for (int i = 0; i < savedItems.length; i++) {
+      // Percorre toda a lista
+      if (savedItems[i].categ.replaceAll(' ', '').toLowerCase() ==
+          categOldSimplified) {
+        // Encontra itens salvos sob a categoria antiga
+        String newImgPathName;
+        if (changeImgName) {
+          // Altera o nome dos arquivos de imagem
+          newImgPathName = categNewSimplified +
+              savedItems[i].imgPath!.split(categOldSimplified).first;
+          FileController.rename(savedItems[i].imgPath!, newImgPathName);
+        } else {
+          // Não altera o nome do arquivo de imagem
+          newImgPathName = savedItems[i].imgPath!;
         }
+        Item updatedItem = Item(
+            categ: categOld,
+            title: savedItems[i].title,
+            description: savedItems[i].description,
+            price: savedItems[i].price,
+            quant: savedItems[i].quant,
+            imgPath: newImgPathName);
+        savedItems[i] = updatedItem;
       }
-      bool update = savedItems!.any((x) => x.categ == categOld);
-      if (update) {
-        setData();
-      }
+    }
+    bool update = savedItems.any((x) => x.categ == categOld);
+    if (update) {
+      setData();
     }
   }
 
   static void delete(Item item) {
-    savedItems!.remove(item);
+    savedItems.remove(item);
     setData();
   }
 
   static Item? search(String title) {
-    if (savedItems != null) {
-      int index = savedItems!.indexWhere((x) => x.title == title);
-      if (index != -1) {
-        return savedItems![index];
-      }
+    int index = savedItems!.indexWhere((x) => x.title == title);
+    if (index != -1) {
+      return savedItems[index];
     }
     return null;
   }
 
   static String? searchAlike(String? title, Item? edited) {
     // Verifica se a lista está vazia
-    if (savedItems != null && savedItems!.length > 1) {
+    if (savedItems.length > 1) {
       // Senão estiver vazia busca por títulos semelhantes (correspondentes ao tirar espaços brancos e maiúsculas)
       String titleSimplified = FormValidations.titlePartialValidation(title);
       // Faz a primeira validação do Form para ver se o título é válido
@@ -102,7 +110,7 @@ class ItemController {
         return titleSimplified;
       }
 
-      int index = savedItems!.indexWhere(
+      int index = savedItems.indexWhere(
           (x) => x.title.replaceAll(" ", "").toLowerCase() == titleSimplified);
       if (index != -1) {
         // Se achar uma correspondência retornaria o index em String
@@ -113,7 +121,7 @@ class ItemController {
             return "editOverride";
           }
         }
-        return savedItems![index].toString();
+        return savedItems[index].toString();
       }
       return "notRegistered";
     }

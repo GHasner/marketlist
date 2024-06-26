@@ -4,7 +4,9 @@ import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:marketlist/services/form_controller.dart';
 import 'package:marketlist/services/navigationState_shared_preferences.dart';
 import 'package:marketlist/src/shared/themes/colors.dart';
 
@@ -22,6 +24,9 @@ class FormFields {
       padding: const EdgeInsets.only(bottom: 10),
       child: TextFormField(
         controller: controller,
+        style: GoogleFonts.poppins(
+          fontSize: 19.75,
+        ),
         decoration: InputDecoration(
           prefixIcon: Icon(
             prefixIcon,
@@ -85,15 +90,14 @@ class FormFields {
       );
     } else {
       return Container(
-        width: double.infinity,
-        height: 200,
-        padding: const EdgeInsets.only(bottom: 10),
+        width: 340,
+        height: 190,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: Colors.grey),
+          border: Border.all(color: ThemeColors.container, width: 2),
           image: DecorationImage(
             image: FileImage(image),
-            fit: BoxFit.cover,
+            fit: BoxFit.contain,
           ),
         ),
       );
@@ -102,32 +106,98 @@ class FormFields {
 
   static Widget confirmButtons(
       BuildContext context, Future<bool> altered, void function) {
-    return Row(
+    return Column(
       children: <Widget>[
-        ElevatedButton(
-          onPressed: () async {
-            if (!(await altered)) {
-              PreviousPageRedirect.redirectProductPage(context);
-            } else {
-              CustomPopUps.dialog(
-                context,
-                "cancelForm",
-                "Continuar",
-                "Confirmar",
-                PreviousPageRedirect.redirectProductPage(context),
-              );
-            }
-          },
-          child: const Text("Cancelar"),
+        SizedBox(
+          width: 340,
+          height: 50,
+          child: ElevatedButton(
+            onPressed: () async {
+              if (!(await altered)) {
+                PreviousPageRedirect.redirectProductPage(context);
+              } else {
+                CustomPopUps.dialog(
+                  context,
+                  "cancelForm",
+                  "Continuar",
+                  "Confirmar",
+                  PreviousPageRedirect.redirectProductPage(context),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+                backgroundColor: ThemeColors.neutral,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 18)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                const SizedBox(width: 52),
+                Text(
+                  "Cancelar",
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    color: ThemeColors.background,
+                  ),
+                ),
+                Container(
+                  width: 52,
+                  alignment: Alignment.centerRight,
+                  child: SvgPicture.asset(
+                    'assets/images/cancel.svg',
+                    color: ThemeColors.background,
+                    height: 33,
+                    width: 33,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
-        const SizedBox(width: 20),
-        ElevatedButton(
-          onPressed: () async {
-            if (await altered) {
-              function;
-            }
-          },
-          child: const Text("Salvar"),
+        const SizedBox(height: 20),
+        SizedBox(
+          width: 340,
+          height: 50,
+          child: ElevatedButton(
+            onPressed: () async {
+              if (await altered) {
+                FormValidations.execCallBack = true;
+                function;
+              }
+            },
+            style: ElevatedButton.styleFrom(
+                backgroundColor: ThemeColors.primary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                const SizedBox(width: 52),
+                Text(
+                  "Salvar",
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    color: ThemeColors.background,
+                  ),
+                ),
+                Container(
+                  width: 52,
+                  alignment: Alignment.centerRight,
+                  child: Icon(
+                    Icons.save_outlined,
+                    color: ThemeColors.background,
+                    size: 26,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ],
     );
