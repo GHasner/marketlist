@@ -113,6 +113,7 @@ class FormFields {
           height: 50,
           child: ElevatedButton(
             onPressed: () async {
+              FormValidations.execPartialCallBack = true;
               if (!(await altered)) {
                 PreviousPageRedirect.redirectProductPage(context);
               } else {
@@ -163,8 +164,8 @@ class FormFields {
           height: 50,
           child: ElevatedButton(
             onPressed: () async {
+              FormValidations.execCallBack = true;
               if (await altered) {
-                FormValidations.execCallBack = true;
                 function;
               }
             },

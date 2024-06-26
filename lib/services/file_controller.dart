@@ -6,22 +6,22 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class FileController {
-  static String directory = '${Directory.current.path}/';
-  static const String imgsPath = 'assets/images/saved/';
+  static String appDirectory = Directory.current.path.replaceAll('/', '\\');
+  static const String imgsPath = 'assets\\images\\saved';
 
   static Future<void> save(File arquivo, String nomeArquivo) async {
-    final pathImagem = '$directory$imgsPath$nomeArquivo';
+    final pathImagem = '$appDirectory$imgsPath$nomeArquivo';
     await arquivo.copy(pathImagem);
   }
 
   static Future<void> delete(String nomeArmazenamento) async {
-    File arquivo = File('$directory$imgsPath$nomeArmazenamento');
+    File arquivo = File('$appDirectory$imgsPath$nomeArmazenamento');
     await arquivo.delete();
   }
 
   static Future<void> rename(String nomeArmazenamento, String novoNome) async {
-    File arquivo = File('$directory$imgsPath$nomeArmazenamento');
-    await arquivo.rename('$directory$imgsPath$novoNome');
+    File arquivo = File('$appDirectory$imgsPath$nomeArmazenamento');
+    await arquivo.rename('$appDirectory$imgsPath$novoNome');
   }
 
   static Future<File?> pickImage(BuildContext context) async {
@@ -49,7 +49,7 @@ class FileController {
   static Future<bool> compareFiles(
       BuildContext context, String savedImgPath, File formFile) async {
     try {
-      final file1 = File('$directory$imgsPath$savedImgPath');
+      final file1 = File('$appDirectory$imgsPath$savedImgPath');
       final file2 = formFile;
       final dataFile1 = await file1.readAsBytes();
       final dataFile2 = await file2.readAsBytes();

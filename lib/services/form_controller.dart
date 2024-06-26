@@ -3,6 +3,7 @@ import 'package:marketlist/models/item.dart';
 
 class FormValidations {
   static bool execCallBack = false;
+  static bool execPartialCallBack = false;
   
   static List<String> invalidTitlePartials = [
     'titleEmpty',

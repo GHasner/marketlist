@@ -27,8 +27,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
     if (!itemListIsEmpty) {
       if (_selection != '') {
         ItemController.filterByCateg(_selection);
-        if (ItemController.filteredItems == null ||
-            ItemController.filteredItems!.isEmpty) {
+        if (ItemController.filteredItems.isEmpty) {
           itemListIsEmpty = true;
         }
       } else {

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:marketlist/pages/market_list.dart';
+import 'package:marketlist/services/categ_controller.dart';
 import 'package:marketlist/services/item_controller.dart';
 import 'package:marketlist/services/navigationState_shared_preferences.dart';
 import 'package:marketlist/src/shared/themes/colors.dart';
@@ -18,6 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
+    CategController.getData();
     ItemController.getData();
     NavigationStateSharedPreferences.savePageState('list');
     NavigationStateSharedPreferences.saveProductPageState('notSelected');

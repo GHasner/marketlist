@@ -9,10 +9,11 @@ class CategController {
 
   static Future<void> getData() async {
     savedCategories = await CategPreferencesService.get();
+    int length = savedCategories.length;
   }
 
   static Future<void> setData() async {
-    await CategPreferencesService.save(savedCategories!);
+    await CategPreferencesService.save(savedCategories);
   }
 
   static bool categIsRegistered(String title) {
@@ -44,9 +45,9 @@ class CategController {
   }
 
   static Categ? search(String title) {
-    int index = savedCategories!.indexWhere((x) => x.title == title);
+    int index = savedCategories.indexWhere((x) => x.title == title);
     if (index != -1) {
-      return savedCategories![index];
+      return savedCategories[index];
     }
     return null;
   }
@@ -73,7 +74,7 @@ class CategController {
             return "editOverride";
           }
         }
-        return savedCategories![index].toString();
+        return savedCategories[index].toString();
       }
       return "notRegistered";
     }

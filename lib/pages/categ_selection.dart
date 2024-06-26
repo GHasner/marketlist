@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:marketlist/models/categ.dart';
@@ -18,22 +20,16 @@ class CategSelectScreen extends StatefulWidget {
 }
 
 class _CategSelectScreenState extends State<CategSelectScreen> {
-  bool categListIsEmpty = true;
-
-  Future<void> searchForCategories() async {
-    categListIsEmpty = await CategPreferencesService.get() == [];
-  }
 
   @override
   void initState() {
     super.initState();
 
     NavigationStateSharedPreferences.saveProductPageState('notSelected');
-    searchForCategories();
   }
 
   Widget _loadCategories() {
-    if (categListIsEmpty) return const SizedBox(height: 20);
+    if (CategController.savedCategories.isEmpty) return const SizedBox(height: 20);
     return FutureBuilder<List<Categ>?>(
       future: CategPreferencesService.get(),
       builder: (context, AsyncSnapshot<List<Categ>?> snapshot) {
@@ -54,16 +50,33 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
     return ListView.builder(
       itemCount: categList!.length,
       itemBuilder: (context, index) {
-        return ListTile(
-          leading: Image.asset(categList[index].imgPath!),
-          title: Text(categList[index].title),
-          subtitle: Text(categList[index].description!),
+        return GestureDetector(
           onLongPress: () => _selectedCategOptions(categList[index]),
           onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) =>
                       ItemListScreen(categ: categList[index].title))),
+          child: Container(
+            width: 159,
+            height: 159,
+            color: ThemeColors.background,
+            child: Column(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.grey),
+                  image: DecorationImage(
+                    image: FileImage(File(categList[index].imgPath!)),
+                    fit: BoxFit.contain,                    
+                    ),
+                  ),
+                ),
+                Text(categList[index].title),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -83,7 +96,6 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
         "Excluir",
         setState(() {
           CategController.delete(categ);
-          searchForCategories();
         }),
       ),
     );
