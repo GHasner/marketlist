@@ -2,6 +2,8 @@ import "package:flutter/material.dart";
 
 class ThemeColors {
   static Color primary = const Color.fromARGB(255, 94, 196, 1);
+  static Color primaryMediumDark = const Color.fromARGB(255, 81, 164, 2);
+  static Color primaryDark = const Color.fromARGB(255, 75, 133, 21);
 
   static Color secondary = const Color.fromARGB(255, 55, 71, 79);
   static Color secondaryMedium = const Color.fromARGB(255, 68, 82, 90);
