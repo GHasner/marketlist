@@ -150,7 +150,7 @@ class _CategFormScreenState extends State<CategFormScreen> {
             onPressed: () async {
               FormValidations.execCallBack = true;
               if (await _checkForAlterations()) {
-                _save();
+                _validate();
               }
             },
             style: ElevatedButton.styleFrom(
@@ -228,7 +228,7 @@ class _CategFormScreenState extends State<CategFormScreen> {
     return false;
   }
 
-  void _save() async {
+  void _validate() async {
     /*
     if (FormValidations.execCallBack) {
       FormValidations.execCallBack = false;
@@ -250,8 +250,21 @@ class _CategFormScreenState extends State<CategFormScreen> {
         return;
       case 'titleInvalid': // ERRO: Título Inválido
         return;
+      case 'editOverride': // PASS: Resulta em update de _categ
+        _save();
+        return;
+      case 'notRegistered': // PASS: Título não registrado
+        _save();
+        return;
+      case null: // PASS: Nenhum registro, lista vazia
+        _save();
+        return;
+      default: // Conflito com Categoria Existente
+        return;
     }
+  }
 
+  void _save() {
     /*
     // Salva imagem
     if (_categ == null) {
@@ -290,17 +303,6 @@ class _CategFormScreenState extends State<CategFormScreen> {
         description: _description.text,
         imgPath: _image!.path);
     CategController.insert(newCateg);
-
-    switch (titleValidation) {
-      case 'editOverride': // PASS: Resulta em update de _categ
-        break;
-      case 'notRegistered': // PASS: Título não registrado
-        break;
-      case null: // PASS: Nenhum registro, lista vazia
-        break;
-      default: // titleValidation = versão simplificada do site
-        break;
-    }
 
     // Após salvar categoria redireciona para página anterior
     Navigator.push(
