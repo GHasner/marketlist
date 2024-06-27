@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:marketlist/models/item.dart';
 import 'package:marketlist/pages/bottomNavigationBar.dart';
 import 'package:marketlist/pages/item_form.dart';
 import 'package:marketlist/pages/widgets/form_fields.dart';
 import 'package:marketlist/services/item_controller.dart';
 import 'package:marketlist/services/navigationState_shared_preferences.dart';
+import 'package:marketlist/src/shared/themes/colors.dart';
 
 class ItemListScreen extends StatefulWidget {
   final String categ;
@@ -19,7 +21,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
   String get _selection => widget.categ;
   late String _categ;
   late String autoRef;
-  late bool itemListIsEmpty;
+  late bool itemListIsEmpty = true;
 
   Future<void> _searchForItems() async {
     await ItemController.getData();
@@ -56,7 +58,13 @@ class _ItemListScreenState extends State<ItemListScreen> {
 
   Widget _loadItems() {
     if (itemListIsEmpty) {
-      return Text("Não há nenhum produto registado$autoRef.");
+      return Text(
+        "Não há nenhum produto registado$autoRef.",
+        textAlign: TextAlign.left,
+        style: GoogleFonts.poppins(
+          fontSize: 16,
+        ),
+      );
     }
     return ListView.builder(
       itemCount: ItemController.filteredItems!.length,
@@ -112,27 +120,50 @@ class _ItemListScreenState extends State<ItemListScreen> {
             onSelected: (String option) {
               switch (option) {
                 case "newItem":
-                  MaterialPageRoute(
-                      builder: (context) => const ItemFormScreen(item: null));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ItemFormScreen(item: null)),
+                  );
                   break;
               }
             },
             itemBuilder: (context) {
               return [
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: "newItem",
-                  child: Text("Novo Item"),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        "Novo Item",
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: ThemeColors.primaryDark,
+                        ),
+                      ),
+                      Icon(
+                        Icons.add_circle_outline_rounded,
+                        color: ThemeColors.primaryDark,
+                      ),
+                    ],
+                  ),
                 ),
               ];
             },
           ),
         ],
       ),
-      body: Column(
-        children: <Widget>[
-          Text(_categ),
-          _loadItems(),
-        ],
+      body: Center(
+        child: Container(
+          padding: const EdgeInsets.only(top: 12),
+          height: double.infinity,
+          width: 340,
+          child: SingleChildScrollView(
+            child: _loadItems(),
+          ),
+        ),
       ),
       bottomNavigationBar: const BottomNavBar(),
     );

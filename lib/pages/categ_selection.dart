@@ -40,15 +40,18 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
           return Text(
               'Ocorreu um erro ao carregar as categorias: ${snapshot.error}');
         } else if (snapshot.hasData) {
-          _categoriesList(snapshot.data);
+          return _categoriesList(snapshot.data);
         }
-        return const SizedBox(height: 20);
+        return const SizedBox();
       },
     );
   }
 
   Widget _categoriesList(List<Categ>? categList) {
-    return ListView.builder(
+    return SizedBox(
+      width: 340,
+      height: 540,
+      child: ListView.builder(
       itemCount: categList!.length,
       itemBuilder: (context, index) {
         if (index + 1 < categList.length) {
@@ -67,21 +70,31 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
                     width: 159,
                     height: 159,
                     color: ThemeColors.background,
-                    child: Column(
+                    child: Column(                            
                       children: <Widget>[
                         Container(
                           height: 120,
                           width: 150,
                           decoration: BoxDecoration(
+                            color: ThemeColors.background,
                             borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.grey),
                             image: DecorationImage(
                               image: FileImage(File(categList[index].imgPath!)),
                               fit: BoxFit.contain,
                             ),
                           ),
                         ),
-                        Text(categList[index].title),
+                        Container(
+                          alignment: Alignment.bottomCenter,
+                          child: Text(
+                            categList[index].title,
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: ThemeColors.secondary,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -101,17 +114,27 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
                       children: <Widget>[
                         Container(
                           height: 120,
-                          width: 150,
+                          //width: 150,
                           decoration: BoxDecoration(
+                            color: ThemeColors.background,
                             borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.grey),
                             image: DecorationImage(
                               image: FileImage(File(categList[index + 1].imgPath!)),
                               fit: BoxFit.contain,
                             ),
                           ),
                         ),
-                        Text(categList[index + 1].title),
+                        Container(
+                          alignment: Alignment.bottomCenter,
+                          child: Text(
+                            categList[index + 1].title,
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: ThemeColors.secondary,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -142,15 +165,25 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
                           height: 120,
                           width: 150,
                           decoration: BoxDecoration(
+                            color: ThemeColors.background,
                             borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.grey),
                             image: DecorationImage(
                               image: FileImage(File(categList[index].imgPath!)),
                               fit: BoxFit.contain,
                             ),
                           ),
                         ),
-                        Text(categList[index].title),
+                        Container(
+                          alignment: Alignment.bottomCenter,
+                          child: Text(
+                            categList[index].title,
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: ThemeColors.secondary,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -165,6 +198,7 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
           child: _addButton(),
         );
       },
+    ),
     );
   }
 
@@ -190,6 +224,7 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ThemeColors.backgroundAlt,
       body: Center(
         child: Container(
           padding: const EdgeInsets.only(top: 12),
@@ -199,9 +234,9 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
             child: Column(
               children: <Widget>[
                 const SizedBox(height: 48), // Padding
-                _unselectedButton(),
+                 _unselectedButton(),
                 _loadCategories(),
-                _addButton(),
+                _addButton(),                
               ],
             ),
           ),
