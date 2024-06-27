@@ -9,7 +9,6 @@ class CategController {
 
   static Future<void> getData() async {
     savedCategories = await CategPreferencesService.get();
-    int length = savedCategories.length;
   }
 
   static Future<void> setData() async {
