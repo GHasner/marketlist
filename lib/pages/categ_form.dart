@@ -34,6 +34,8 @@ class _CategFormScreenState extends State<CategFormScreen> {
   final TextEditingController _title = TextEditingController();
   final TextEditingController _description = TextEditingController();
 
+  String _validationMessage = "";
+
   void _initForm(bool isNew) {
     if (!isNew) {
       _refTitle = _categ!.title;
@@ -81,6 +83,7 @@ class _CategFormScreenState extends State<CategFormScreen> {
                 ],
               ),
               _confirmButtons(),
+              _onValidate(),
             ],
           ),
         ),
@@ -188,6 +191,29 @@ class _CategFormScreenState extends State<CategFormScreen> {
     );
   }
 
+  Widget _onValidate() {
+    if (_validationMessage != "") {
+      return Column(
+        children: <Widget>[
+          const SizedBox(height: 10), // Padding
+          Container(
+            width: 340,
+            alignment: Alignment.topLeft,
+            child: Text(
+              _validationMessage,
+              style: GoogleFonts.poppins(
+                fontSize: 15,
+                color: ThemeColors.error,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    return const SizedBox();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -243,12 +269,24 @@ class _CategFormScreenState extends State<CategFormScreen> {
         CategController.searchAlike(_title.text, _categ);
     switch (titleValidation) {
       case 'titleEmpty': // ERRO: Título Inválido
+        setState(() {
+          _validationMessage = "Insira um título";
+        });
         return;
       case 'tooLong': // ERRO: Título Inválido
+        setState(() {
+          _validationMessage = "Título muito longo";
+        });
         return;
       case 'invalidChars': // ERRO: Título Inválido
+        setState(() {
+          _validationMessage = "Caracter(es) inválidos no título";
+        });
         return;
       case 'titleInvalid': // ERRO: Título Inválido
+        setState(() {
+          _validationMessage = "Título inválido";
+        });
         return;
       case 'editOverride': // PASS: Resulta em update de _categ
         _save();
@@ -260,6 +298,9 @@ class _CategFormScreenState extends State<CategFormScreen> {
         _save();
         return;
       default: // Conflito com Categoria Existente
+        setState(() {
+          _validationMessage = "Já existe uma categoria com esse título";
+        });
         return;
     }
   }
