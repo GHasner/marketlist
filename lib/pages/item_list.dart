@@ -95,7 +95,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
   void _selectedItemOptions(Item item) {
     CustomPopUps.editDeleteModal(
       context,
-      MaterialPageRoute(builder: (context) => ItemFormScreen(item: item)),
+      MaterialPageRoute(builder: (context) => ItemFormScreen(item: item, categ: _categ)),
       CustomPopUps.dialog(
         context,
         "deleteItem",
@@ -123,7 +123,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const ItemFormScreen(item: null)),
+                      builder: (context) => ItemFormScreen(item: null, categ: _categ,)),
                   );
                   break;
               }

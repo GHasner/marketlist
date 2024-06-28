@@ -41,7 +41,7 @@ class _CategFormScreenState extends State<CategFormScreen> {
       _refTitle = _categ!.title;
       _title.text = _categ!.title;
       _description.text = _categ!.description!;
-      _imgPath += _categ!.imgPath!;
+      _imgPath = _categ!.imgPath!;
       _image = File(_imgPath);
     }
   }
@@ -147,7 +147,6 @@ class _CategFormScreenState extends State<CategFormScreen> {
           height: 50,
           child: ElevatedButton(
             onPressed: () async {
-              FormValidations.execCallBack = true;
               if (await _checkForAlterations()) {
                 _validate();
               }
