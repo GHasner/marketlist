@@ -87,6 +87,7 @@ class ItemController {
   }
 
   static void delete(Item item) {
+    item = savedItems.lastWhere((i) => i.title == item.title);
     savedItems.remove(item);
     setData();
   }

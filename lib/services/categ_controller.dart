@@ -26,7 +26,7 @@ class CategController {
   // Get is implemented implicitly through FutureBuilder
 
   static void insert(Categ categ) {
-    savedCategories.add(categ);
+    savedCategories.add(categ);    
     setData();
   }
 
@@ -39,6 +39,7 @@ class CategController {
   }
 
   static void delete(Categ categ) {
+    categ = savedCategories.lastWhere((c) => c.title == categ.title);
     savedCategories.remove(categ);
     setData();
   }
