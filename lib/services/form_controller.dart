@@ -79,7 +79,7 @@ class FormValidations {
     String unformatedPrice = price;
     unformatedPrice = unformatedPrice.replaceAll("R\$", "");
     unformatedPrice = unformatedPrice.replaceAll(" ", "");
-    unformatedPrice = unformatedPrice.replaceAll(".", "");
+    unformatedPrice = unformatedPrice.replaceAll(",", ".");
     double value = double.parse(unformatedPrice);
     return value;
   }
