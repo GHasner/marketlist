@@ -237,14 +237,14 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
                           _pressTimer!.stop();
                           if (_pressTimer!.elapsedMilliseconds > 600) {
                             // LongPress
-                            _selectedCategOptions(categList[index + 1]);
+                            _selectedCategOptions(categList[index]);
                           } else {
                             // Tap
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ItemListScreen(
-                                        categ: categList[index + 1].title)));
+                                        categ: categList[index].title)));
                           }
                         }
                       },
@@ -362,7 +362,10 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                onPressed: () => _confirmDeleteDialog(categ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _confirmDeleteDialog(categ);
+                },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[

@@ -100,17 +100,13 @@ class _CategFormScreenState extends State<CategFormScreen> {
           height: 50,
           child: ElevatedButton(
             onPressed: () async {
-              FormValidations.execPartialCallBack = true;
               if (!(await _checkForAlterations())) {
-                PreviousPageRedirect.redirectProductPage(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CategSelectScreen()));
               } else {
-                CustomPopUps.dialog(
-                  context,
-                  "cancelForm",
-                  "Continuar",
-                  "Confirmar",
-                  PreviousPageRedirect.redirectProductPage(context),
-                );
+                _confirmCancelDialog();
               }
             },
             style: ElevatedButton.styleFrom(
@@ -214,6 +210,55 @@ class _CategFormScreenState extends State<CategFormScreen> {
     return const SizedBox();
   }
 
+  void _confirmCancelDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: const Text(
+            "Todas as suas alterações serão perdidas, tem certeza de que deseja voltar sem salvar?",
+            style: TextStyle(
+              fontSize: 16,
+              // color: ,
+            ),
+          ),
+          actions: <Widget>[
+            // Opcão: Cancelar ação
+            TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(ThemeColors.neutral),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                return;
+              },
+              child: const Text(
+                "Continuar",
+                style: TextStyle(fontSize: 15),
+              ),
+            ),
+            // Opção: Confirmar ação
+            TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(ThemeColors.cancel),
+              ),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CategSelectScreen()));
+              },
+              child: const Text(
+                "Confirmar",
+                style: TextStyle(fontSize: 15),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -260,13 +305,12 @@ class _CategFormScreenState extends State<CategFormScreen> {
       FormValidations.execCallBack = false;
       ...
     }
-    */    
+    */
     if (_image == null) {
       // ERRO: Selecione uma imagem
       return;
     }
-    String? titleValidation =
-        CategController.searchAlike(_title.text, _categ);
+    String? titleValidation = CategController.searchAlike(_title.text, _categ);
     switch (titleValidation) {
       case 'titleEmpty': // ERRO: Título Inválido
         setState(() {
@@ -349,6 +393,6 @@ class _CategFormScreenState extends State<CategFormScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const CategSelectScreen()),
-    );  
+    );
   }
 }
