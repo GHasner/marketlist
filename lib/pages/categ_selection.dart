@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -20,6 +21,8 @@ class CategSelectScreen extends StatefulWidget {
 }
 
 class _CategSelectScreenState extends State<CategSelectScreen> {
+  Stopwatch? _pressTimer;
+
   @override
   void initState() {
     super.initState();
@@ -29,7 +32,12 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
 
   Widget _loadCategories() {
     if (CategController.savedCategories.isEmpty) {
-      return const SizedBox(height: 20);
+      return Container(
+        width: 340,
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.only(top: 20),
+        child: _addButton(),
+      );
     }
     return FutureBuilder<List<Categ>?>(
       future: CategPreferencesService.get(),
@@ -42,7 +50,12 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
         } else if (snapshot.hasData) {
           return _categoriesList(snapshot.data);
         }
-        return const SizedBox();
+        return Container(
+          width: 340,
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.only(top: 20),
+          child: _addButton(),
+        );
       },
     );
   }
@@ -52,172 +65,383 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
       width: 340,
       height: 540,
       child: ListView.builder(
-      itemCount: categList!.length,
-      itemBuilder: (context, index) {
-        if (index + 1 < categList.length) {
-          if ((index + 1) % 2 != 0) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                GestureDetector(
-                  onLongPress: () => _selectedCategOptions(categList[index]),
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              ItemListScreen(categ: categList[index].title))),
-                  child: Container(
-                    width: 159,
-                    height: 159,
-                    color: ThemeColors.background,
-                    child: Column(                            
-                      children: <Widget>[
-                        Container(
-                          height: 120,
-                          width: 150,
-                          decoration: BoxDecoration(
-                            color: ThemeColors.background,
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image: FileImage(File(categList[index].imgPath!)),
-                              fit: BoxFit.contain,
+        itemCount: categList!.length,
+        padding: const EdgeInsets.all(0),
+        itemBuilder: (context, index) {
+          if (index + 1 < categList.length) {
+            if ((index + 1) % 2 != 0) {
+              return Container(
+                padding: const EdgeInsets.only(top: 18),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTapDown: (details) {
+                        _pressTimer = Stopwatch();
+                        _pressTimer!.start();
+                      },
+                      onTapCancel: () {
+                        _pressTimer = null;
+                      },
+                      onTapUp: (details) {
+                        if (_pressTimer != null) {
+                          _pressTimer!.stop();
+                          if (_pressTimer!.elapsedMilliseconds > 600) {
+                            // LongPress
+                            _selectedCategOptions(categList[index + 1]);
+                          } else {
+                            // Tap
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ItemListScreen(
+                                        categ: categList[index + 1].title)));
+                          }
+                        }
+                      },
+                      /*
+                      onLongPress: () =>
+                          _selectedCategOptions(categList[index + 1]),
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ItemListScreen(
+                                  categ: categList[index + 1].title))),
+                      */
+                      child: Container(
+                        width: 159,
+                        height: 165,
+                        color: ThemeColors.background,
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              height: 120,
+                              width: 150,
+                              decoration: BoxDecoration(
+                                color: ThemeColors.background,
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                  image: FileImage(
+                                      File(categList[index].imgPath!)),
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.bottomCenter,
-                          child: Text(
-                            categList[index].title,
-                            style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: ThemeColors.secondary,
+                            Container(
+                              alignment: Alignment.bottomCenter,
+                              child: Text(
+                                categList[index].title,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: ThemeColors.secondary,
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-                GestureDetector(
-                  onLongPress: () => _selectedCategOptions(categList[index + 1]),
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              ItemListScreen(categ: categList[index + 1].title))),
-                  child: Container(
-                    width: 159,
-                    height: 159,
-                    color: ThemeColors.background,
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          height: 120,
-                          //width: 150,
-                          decoration: BoxDecoration(
-                            color: ThemeColors.background,
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image: FileImage(File(categList[index + 1].imgPath!)),
-                              fit: BoxFit.contain,
+                    GestureDetector(
+                      onTapDown: (details) {
+                        _pressTimer = Stopwatch();
+                        _pressTimer!.start();
+                      },
+                      onTapCancel: () {
+                        _pressTimer = null;
+                      },
+                      onTapUp: (details) {
+                        if (_pressTimer != null) {
+                          _pressTimer!.stop();
+                          if (_pressTimer!.elapsedMilliseconds > 600) {
+                            // LongPress
+                            _selectedCategOptions(categList[index + 1]);
+                          } else {
+                            // Tap
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ItemListScreen(
+                                        categ: categList[index + 1].title)));
+                          }
+                        }
+                      },
+                      /*
+                      onLongPress: () =>
+                          _selectedCategOptions(categList[index + 1]),
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ItemListScreen(
+                                  categ: categList[index + 1].title))),
+                      */
+                      child: Container(
+                        width: 159,
+                        height: 165,
+                        color: ThemeColors.background,
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              height: 120,
+                              //width: 150,
+                              decoration: BoxDecoration(
+                                color: ThemeColors.background,
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                  image: FileImage(
+                                      File(categList[index + 1].imgPath!)),
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.bottomCenter,
-                          child: Text(
-                            categList[index + 1].title,
-                            style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: ThemeColors.secondary,
+                            Container(
+                              alignment: Alignment.bottomCenter,
+                              child: Text(
+                                categList[index + 1].title,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: ThemeColors.secondary,
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            );
+              );
+            }
+            return const SizedBox();
           }
-          return const SizedBox();
-        }
-        if (index == 0 || index % 2 == 0) {
-          return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                GestureDetector(
-                  onLongPress: () => _selectedCategOptions(categList[index]),
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              ItemListScreen(categ: categList[index].title))),
-                  child: Container(
-                    width: 159,
-                    height: 159,
-                    color: ThemeColors.background,
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          height: 120,
-                          width: 150,
-                          decoration: BoxDecoration(
-                            color: ThemeColors.background,
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image: FileImage(File(categList[index].imgPath!)),
-                              fit: BoxFit.contain,
+          if (categList.isNotEmpty) {
+            if (index == 0 || index % 2 == 0) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 18),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTapDown: (details) {
+                        _pressTimer = Stopwatch();
+                        _pressTimer!.start();
+                      },
+                      onTapCancel: () {
+                        _pressTimer = null;
+                      },
+                      onTapUp: (details) {
+                        if (_pressTimer != null) {
+                          _pressTimer!.stop();
+                          if (_pressTimer!.elapsedMilliseconds > 600) {
+                            // LongPress
+                            _selectedCategOptions(categList[index + 1]);
+                          } else {
+                            // Tap
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ItemListScreen(
+                                        categ: categList[index + 1].title)));
+                          }
+                        }
+                      },
+                      /*
+                      onLongPress: () =>
+                          _selectedCategOptions(categList[index + 1]),
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ItemListScreen(
+                                  categ: categList[index + 1].title))),
+                      */
+                      child: Container(
+                        width: 159,
+                        height: 165,
+                        color: ThemeColors.background,
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              height: 120,
+                              width: 150,
+                              decoration: BoxDecoration(
+                                color: ThemeColors.background,
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                  image: FileImage(
+                                      File(categList[index].imgPath!)),
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.bottomCenter,
-                          child: Text(
-                            categList[index].title,
-                            style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: ThemeColors.secondary,
+                            Container(
+                              alignment: Alignment.bottomCenter,
+                              child: Text(
+                                categList[index].title,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: ThemeColors.secondary,
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                    _addButton(),
+                  ],
                 ),
-                _addButton(),
-              ],
-            );
-        }
-        return Container(
-          width: 340,
-          alignment: Alignment.centerLeft,
-          child: _addButton(),
-        );
-      },
-    ),
+              );
+            }
+          }
+          return Container(
+            width: 340,
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.only(top: 18),
+            child: _addButton(),
+          );
+        },
+      ),
     );
   }
 
   void _selectedCategOptions(Categ categ) {
-    CustomPopUps.editDeleteModal(
-      context,
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => CategFormScreen(categ: categ))),
-      CustomPopUps.dialog(
-        context,
-        "deleteCateg",
-        "Cancelar",
-        "Excluir",
-        setState(() {
-          CategController.delete(categ);
-        }),
-      ),
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          height: 140,
+          padding: const EdgeInsets.only(bottom: 20),
+          width: double.infinity,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  alignment: Alignment.center,
+                  elevation: 0,
+                  maximumSize: const Size(200, 100),
+                  minimumSize: const Size(190, 100),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CategFormScreen(categ: categ))),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const Icon(
+                      Icons.edit,
+                      size: 36,
+                    ),
+                    Text(
+                      "Editar",
+                      style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12) // Padding
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  alignment: Alignment.center,
+                  elevation: 0,
+                  maximumSize: const Size(200, 100),
+                  minimumSize: const Size(190, 100),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () => _confirmDeleteDialog(categ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const Icon(
+                      Icons.delete,
+                      size: 36,
+                    ),
+                    Text(
+                      "Deletar",
+                      style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12) // Padding
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _confirmDeleteDialog(Categ categ) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(
+            "Excluir Categoria",
+            style: TextStyle(
+              fontSize: 20,
+              // color: ,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          content: const Text(
+            "Tem certeza de que deseja excluir esta categoria?",
+            style: TextStyle(
+              fontSize: 16,
+              // color: ,
+            ),
+          ),
+          actions: <Widget>[
+            // Opcão: Cancelar ação
+            TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(ThemeColors.neutral),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                return;
+              },
+              child: const Text(
+                "Cancelar",
+                style: TextStyle(fontSize: 15),
+              ),
+            ),
+            // Opção: Confirmar ação
+            TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(ThemeColors.cancel),
+              ),
+              onPressed: () {
+                setState(() {
+                  CategController.delete(categ);
+                });
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "Excluir",
+                style: TextStyle(fontSize: 15),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -234,9 +458,8 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
             child: Column(
               children: <Widget>[
                 const SizedBox(height: 48), // Padding
-                 _unselectedButton(),
+                _unselectedButton(),
                 _loadCategories(),
-                _addButton(),                
               ],
             ),
           ),
@@ -277,8 +500,8 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
 
   Widget _addButton() {
     return SizedBox(
-      height: 159,
       width: 159,
+      height: 165,
       child: ElevatedButton(
         onPressed: () {
           Navigator.push(

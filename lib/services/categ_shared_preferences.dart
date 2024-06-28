@@ -13,7 +13,7 @@ class CategPreferencesService {
   static Future<List<Categ>> get() async {
     final prefs = await SharedPreferences.getInstance();
     final String? categs = prefs.getString('categs');
-    if (categs != null) {
+    if (categs != null && categs != '[]') {
       final List<dynamic> decodedData = json.decode(categs);
       return decodedData.map((json) => Categ.fromJson(json)).toList();
     }

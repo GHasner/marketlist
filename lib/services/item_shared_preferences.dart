@@ -13,7 +13,7 @@ class ItemPreferencesService {
   static Future<List<Item>> get() async {
     final prefs = await SharedPreferences.getInstance();
     final String? items = prefs.getString('items');
-    if (items != null) {
+    if (items != null && items != '[]') {
       final List<dynamic> decodedData = json.decode(items);
       return decodedData.map((json) => Item.fromJson(json)).toList();
     }
