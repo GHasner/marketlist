@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:marketlist/models/item.dart';
@@ -22,6 +24,8 @@ class _ItemListScreenState extends State<ItemListScreen> {
   late String _categ;
   late String autoRef;
   late bool itemListIsEmpty = true;
+
+  Stopwatch? _pressTimer;
 
   Future<void> _searchForItems() async {
     await ItemController.getData();
@@ -66,36 +70,262 @@ class _ItemListScreenState extends State<ItemListScreen> {
         ),
       );
     }
-    return ListView.builder(
-      itemCount: ItemController.filteredItems!.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          leading: Image.asset(ItemController.filteredItems![index].imgPath!),
-          title: Text(ItemController.filteredItems![index].title),
-          subtitle: Text(ItemController.filteredItems![index].description!),
-          trailing: Row(
-            children: <Widget>[
-              Text(ItemController.filteredItems![index].price.toString()),
-              ElevatedButton(
-                onPressed: () {
-                  ItemController.updateQnt(
-                      ItemController.filteredItems![index], 1);
-                },
-                child: const Icon(Icons.add),
-              ),
-            ],
-          ),
-          onLongPress: () =>
-              _selectedItemOptions(ItemController.filteredItems![index]),
-        );
-      },
+    return SizedBox(
+      width: 340,
+      height: 540,
+      child: ListView.builder(
+        itemCount: ItemController.filteredItems.length,
+        padding: const EdgeInsets.all(0),
+        itemBuilder: (context, index) {
+          if (index + 1 < ItemController.filteredItems.length) {
+            if ((index + 1) % 2 != 0) {
+              return Container(
+                padding: const EdgeInsets.only(top: 18),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTapDown: (details) {
+                        _pressTimer = Stopwatch();
+                        _pressTimer!.start();
+                      },
+                      onTapCancel: () {
+                        _pressTimer = null;
+                      },
+                      onTapUp: (details) {
+                        if (_pressTimer != null) {
+                          _pressTimer!.stop();
+                          if (_pressTimer!.elapsedMilliseconds > 600) {
+                            // LongPress
+                            _selectedItemOptions(
+                                ItemController.filteredItems[index + 1]);
+                          } else {
+                            // Tap
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ItemFormScreen(
+                                        item: ItemController.filteredItems[index],
+                                        categ: _categ,
+                                      )),
+                            );
+                          }
+                        }
+                      },
+                      child: Container(
+                        width: 159,
+                        height: 200,
+                        color: ThemeColors.background,
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              height: 120,
+                              width: 150,
+                              decoration: BoxDecoration(
+                                color: ThemeColors.container,
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                  image: FileImage(File(ItemController
+                                      .filteredItems[index].imgPath!)),
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.bottomCenter,
+                              child: Text(
+                                ItemController.filteredItems[index].title,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: ThemeColors.secondary,
+                                ),
+                              ),
+                            ),
+                            Text(ItemController.filteredItems[index].price
+                                .toString()),
+                            ElevatedButton(
+                              onPressed: () {
+                                ItemController.updateQnt(
+                                    ItemController.filteredItems[index], 1);
+                              },
+                              child: const Icon(Icons.add),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTapDown: (details) {
+                        _pressTimer = Stopwatch();
+                        _pressTimer!.start();
+                      },
+                      onTapCancel: () {
+                        _pressTimer = null;
+                      },
+                      onTapUp: (details) {
+                        if (_pressTimer != null) {
+                          _pressTimer!.stop();
+                          if (_pressTimer!.elapsedMilliseconds > 600) {
+                            // LongPress
+                            _selectedItemOptions(
+                                ItemController.filteredItems[index + 1]);
+                          } else {
+                            // Tap
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ItemFormScreen(
+                                        item: ItemController.filteredItems[index],
+                                        categ: _categ,
+                                      )),
+                            );
+                          }
+                        }
+                      },
+                      child: Container(
+                        width: 159,
+                        height: 200,
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              height: 120,
+                              //width: 150,
+                              decoration: BoxDecoration(
+                                color: ThemeColors.container,
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                  image: FileImage(File(ItemController
+                                      .filteredItems[index + 1].imgPath!)),
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.bottomCenter,
+                              child: Text(
+                                ItemController.filteredItems[index + 1].title,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: ThemeColors.secondary,
+                                ),
+                              ),
+                            ),
+                            Text(ItemController.filteredItems[index].price
+                                .toString()),
+                            ElevatedButton(
+                              onPressed: () {
+                                ItemController.updateQnt(
+                                    ItemController.filteredItems[index], 1);
+                              },
+                              child: const Icon(Icons.add),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+            return const SizedBox();
+          }
+          if (ItemController.filteredItems.isNotEmpty) {
+            if (index == 0 || index % 2 == 0) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 18),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTapDown: (details) {
+                        _pressTimer = Stopwatch();
+                        _pressTimer!.start();
+                      },
+                      onTapCancel: () {
+                        _pressTimer = null;
+                      },
+                      onTapUp: (details) {
+                        if (_pressTimer != null) {
+                          _pressTimer!.stop();
+                          if (_pressTimer!.elapsedMilliseconds > 600) {
+                            // LongPress
+                            _selectedItemOptions(
+                                ItemController.filteredItems[index]);
+                          } else {
+                            // Tap
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ItemFormScreen(
+                                        item: ItemController.filteredItems[index],
+                                        categ: _categ,
+                                      )),
+                            );
+                          }
+                        }
+                      },
+                      child: Container(
+                        width: 159,
+                        height: 200,
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              height: 120,
+                              width: 150,
+                              decoration: BoxDecoration(
+                                color: ThemeColors.container,
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                  image: FileImage(File(ItemController
+                                      .filteredItems[index].imgPath!)),
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.bottomCenter,
+                              child: Text(
+                                ItemController.filteredItems[index].title,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: ThemeColors.secondary,
+                                ),
+                              ),
+                            ),
+                            Text(ItemController.filteredItems[index].price
+                                .toString()),
+                            ElevatedButton(
+                              onPressed: () {
+                                ItemController.updateQnt(
+                                    ItemController.filteredItems[index], 1);
+                              },
+                              child: const Icon(Icons.add),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+          }
+        },
+      ),
     );
   }
 
   void _selectedItemOptions(Item item) {
     CustomPopUps.editDeleteModal(
       context,
-      MaterialPageRoute(builder: (context) => ItemFormScreen(item: item, categ: _categ)),
+      MaterialPageRoute(
+          builder: (context) => ItemFormScreen(item: item, categ: _categ)),
       CustomPopUps.dialog(
         context,
         "deleteItem",
@@ -123,7 +353,10 @@ class _ItemListScreenState extends State<ItemListScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ItemFormScreen(item: null, categ: _categ,)),
+                        builder: (context) => ItemFormScreen(
+                              item: null,
+                              categ: _categ,
+                            )),
                   );
                   break;
               }
@@ -155,6 +388,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
           ),
         ],
       ),
+      backgroundColor: ThemeColors.background,
       body: Center(
         child: Container(
           padding: const EdgeInsets.only(top: 12),
