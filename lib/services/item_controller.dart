@@ -98,7 +98,7 @@ class ItemController {
   }
 
   static Item? search(String title) {
-    int index = savedItems!.indexWhere((x) => x.title == title);
+    int index = savedItems.indexWhere((x) => x.title == title);
     if (index != -1) {
       return savedItems[index];
     }

@@ -10,9 +10,7 @@ import 'package:marketlist/pages/widgets/form_fields.dart';
 import 'package:marketlist/services/categ_controller.dart';
 import 'package:marketlist/services/emulator_API.dart';
 import 'package:marketlist/services/file_controller.dart';
-import 'package:marketlist/services/form_controller.dart';
 import 'package:marketlist/services/item_controller.dart';
-import 'package:marketlist/services/navigationState_shared_preferences.dart';
 import 'package:marketlist/src/shared/themes/colors.dart';
 
 class CategFormScreen extends StatefulWidget {

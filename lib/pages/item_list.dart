@@ -486,6 +486,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
               );
             }
           }
+          return const SizedBox();
         },
       ),
     );
