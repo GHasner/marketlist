@@ -63,33 +63,30 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
         child: SizedBox(
           height: 628,
           width: 340,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  const SizedBox(height: 20), // Padding
-                  FormFields.textField(_title, 'Título', Icons.label_outline),
-                  const SizedBox(height: 14), // Padding
-                  FormFields.textField(
-                      _description, 'Descrição (Opcional)', Icons.short_text),
-                  const SizedBox(height: 14), // Padding
-                  _monetaryField(_price),
-                  const SizedBox(height: 14), // Padding
-                  GestureDetector(
-                    child: FormFields.imagePlaceholder(_image),
-                    onTap: () async {
-                      var temp = await EmulatorAPI.pickImage(context);
-                      setState(() {
-                        _image = temp;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              _confirmButtons(),
-              _onValidate(),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                const SizedBox(height: 20), // Padding
+                FormFields.textField(_title, 'Título', Icons.label_outline),
+                const SizedBox(height: 14), // Padding
+                FormFields.textField(
+                    _description, 'Descrição (Opcional)', Icons.short_text),
+                const SizedBox(height: 14), // Padding
+                _monetaryField(_price),
+                const SizedBox(height: 14), // Padding
+                GestureDetector(
+                  child: FormFields.imagePlaceholder(_image),
+                  onTap: () async {
+                    var temp = await EmulatorAPI.pickImage(context);
+                    setState(() {
+                      _image = temp;
+                    });
+                  },
+                ),
+                _onValidate(),
+                _confirmButtons(),
+              ],
+            ),
           ),
         ),
       ),
@@ -102,7 +99,10 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
       child: TextFormField(
         controller: _price,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly, CurrencyInputFormatter()],
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly,
+          CurrencyInputFormatter()
+        ],
         style: GoogleFonts.poppins(
           fontSize: 19.75,
         ),
@@ -190,11 +190,12 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
               }
             },
             style: ElevatedButton.styleFrom(
-                backgroundColor: ThemeColors.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 20)),
+              backgroundColor: ThemeColors.primary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -225,10 +226,12 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
   }
 
   Widget _onValidate() {
-    if (_validationMessage != "") {
+    if (_validationMessage == "pass") {
+      // _save();
+    } else if (_validationMessage != "") {
       return Column(
         children: <Widget>[
-          const SizedBox(height: 10), // Padding
+          const SizedBox(height: 30), // Padding
           Container(
             width: 340,
             alignment: Alignment.topLeft,
@@ -241,10 +244,11 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
               ),
             ),
           ),
+          const SizedBox(height: 20), // Padding
         ],
       );
     }
-    return const SizedBox();
+    return const SizedBox(height: 32); // Padding
   }
 
   void _confirmCancelDialog() {
@@ -299,7 +303,14 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(_refTitle)),
+      appBar: AppBar(
+        title: Text(
+          _refTitle,
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
       body: _form(),
     );
   }
@@ -317,6 +328,9 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
       if (_description.text != "") return true;
       if (_price.text != "") return true;
       if (_image != null) return true;
+      setState(() {
+        _validationMessage = "Preencha todos os campos obrigatórios";
+      });
       return false;
     } else {
       if (_title.text != _item!.title) return true;
@@ -338,10 +352,7 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
       ...
     }
     */
-    if (_image == null) {
-      // ERRO: Selecione uma imagem
-      return;
-    }
+
     String? titleValidation = ItemController.searchAlike(_title.text, _item);
     switch (titleValidation) {
       case 'titleEmpty': // ERRO: Título Inválido
@@ -365,20 +376,35 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
         });
         return;
       case 'editOverride': // PASS: Resulta em update de _item
-        _save();
-        return;
+        _validationMessage = "pass";
+        break;
       case 'notRegistered': // PASS: Título não registrado
-        _save();
-        return;
+        _validationMessage = "pass";
+        break;
       case null: // PASS: Nenhum registro, lista vazia
-        _save();
-        return;
+        _validationMessage = "pass";
+        break;
       default: // Conflito com Item Existente
         setState(() {
           _validationMessage = "Já existe um item com esse título";
         });
-        return;
+        break;
     }
+    if (_validationMessage == "Já existe um item com esse título") return;
+    if (_price.text == "") {
+      setState(() {
+        _validationMessage = "Insira o preço";
+      });
+      return;
+    }
+    if (_image == null) {
+      // ERRO: Selecione uma imagem
+      setState(() {
+        _validationMessage = "Selecione uma imagem";
+      });
+      return;
+    }
+    if (_validationMessage == "pass") _save();
   }
 
   void _save() {

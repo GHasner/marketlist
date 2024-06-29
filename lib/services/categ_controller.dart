@@ -26,7 +26,7 @@ class CategController {
   // Get is implemented implicitly through FutureBuilder
 
   static void insert(Categ categ) {
-    savedCategories.add(categ);    
+    savedCategories.add(categ);
     setData();
   }
 
@@ -53,15 +53,15 @@ class CategController {
   }
 
   static String? searchAlike(String? title, Categ? edited) {
+    String titleSimplified = FormValidations.titlePartialValidation(title);
+    // Faz a primeira validação do Form para ver se o título é válido
+    if (FormValidations.invalidTitlePartials.contains(titleSimplified)) {
+      // Senão for retorna o tipo de invalidez
+      return titleSimplified;
+    }
     // Verifica se a lista está vazia
-    if (savedCategories.length > 1) {
+    if (savedCategories.isNotEmpty) {
       // Senão estiver vazia busca por títulos semelhantes (correspondentes ao tirar espaços brancos e maiúsculas)
-      String titleSimplified = FormValidations.titlePartialValidation(title);
-      // Faz a primeira validação do Form para ver se o título é válido
-      if (FormValidations.invalidTitlePartials.contains(titleSimplified)) {
-        // Senão for retorna o tipo de invalidez
-        return titleSimplified;
-      }
 
       int index = savedCategories.indexWhere(
           (x) => x.title.replaceAll(" ", "").toLowerCase() == titleSimplified);

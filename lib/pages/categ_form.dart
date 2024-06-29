@@ -60,31 +60,28 @@ class _CategFormScreenState extends State<CategFormScreen> {
         child: SizedBox(
           height: 628,
           width: 340,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  const SizedBox(height: 20), // Padding
-                  FormFields.textField(_title, 'Título', Icons.label_outline),
-                  const SizedBox(height: 14), // Padding
-                  FormFields.textField(
-                      _description, 'Descrição (Opcional)', Icons.short_text),
-                  const SizedBox(height: 14), // Padding
-                  GestureDetector(
-                    child: FormFields.imagePlaceholder(_image),
-                    onTap: () async {
-                      var temp = await EmulatorAPI.pickImage(context);
-                      setState(() {
-                        _image = temp;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              _confirmButtons(),
-              _onValidate(),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                const SizedBox(height: 20), // Padding
+                FormFields.textField(_title, 'Título', Icons.label_outline),
+                const SizedBox(height: 14), // Padding
+                FormFields.textField(
+                    _description, 'Descrição (Opcional)', Icons.short_text),
+                const SizedBox(height: 14), // Padding
+                GestureDetector(
+                  child: FormFields.imagePlaceholder(_image),
+                  onTap: () async {
+                    var temp = await EmulatorAPI.pickImage(context);
+                    setState(() {
+                      _image = temp;
+                    });
+                  },
+                ),
+                _onValidate(),
+                _confirmButtons(),
+              ],
+            ),
           ),
         ),
       ),
@@ -187,10 +184,12 @@ class _CategFormScreenState extends State<CategFormScreen> {
   }
 
   Widget _onValidate() {
-    if (_validationMessage != "") {
+    if (_validationMessage == "pass") {
+      // _save();
+    } else if (_validationMessage != "") {
       return Column(
         children: <Widget>[
-          const SizedBox(height: 10), // Padding
+          const SizedBox(height: 39), // Padding
           Container(
             width: 340,
             alignment: Alignment.topLeft,
@@ -203,10 +202,11 @@ class _CategFormScreenState extends State<CategFormScreen> {
               ),
             ),
           ),
+          const SizedBox(height: 20), // Padding
         ],
       );
     }
-    return const SizedBox();
+    return const SizedBox(height: 80); // Padding
   }
 
   void _confirmCancelDialog() {
@@ -285,6 +285,9 @@ class _CategFormScreenState extends State<CategFormScreen> {
       if (_title.text != "") return true;
       if (_description.text != "") return true;
       if (_image != null) return true;
+      setState(() {
+        _validationMessage = "Preencha todos os campos obrigatórios";
+      });
       return false;
     } else {
       if (_title.text != _categ!.title) return true;
@@ -305,10 +308,7 @@ class _CategFormScreenState extends State<CategFormScreen> {
       ...
     }
     */
-    if (_image == null) {
-      // ERRO: Selecione uma imagem
-      return;
-    }
+
     String? titleValidation = CategController.searchAlike(_title.text, _categ);
     switch (titleValidation) {
       case 'titleEmpty': // ERRO: Título Inválido
@@ -332,20 +332,29 @@ class _CategFormScreenState extends State<CategFormScreen> {
         });
         return;
       case 'editOverride': // PASS: Resulta em update de _categ
-        _save();
-        return;
+        _validationMessage = "pass";
+        break;
       case 'notRegistered': // PASS: Título não registrado
-        _save();
-        return;
+        _validationMessage = "pass";
+        break;
       case null: // PASS: Nenhum registro, lista vazia
-        _save();
-        return;
+        _validationMessage = "pass";
+        break;
       default: // Conflito com Categoria Existente
         setState(() {
           _validationMessage = "Já existe uma categoria com esse título";
         });
-        return;
+        break;
     }
+    if (_validationMessage == "Já existe uma categoria com esse título") return;
+    if (_image == null) {
+      // ERRO: Selecione uma imagem
+      setState(() {
+        _validationMessage = "Selecione uma imagem";
+      });
+      return;
+    }
+    if (_validationMessage == "pass") _save();
   }
 
   void _save() {

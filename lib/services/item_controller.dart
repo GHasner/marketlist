@@ -15,7 +15,7 @@ class ItemController {
   }
 
   static Future<void> setData() async {
-    await ItemPreferencesService.save(savedItems!);
+    await ItemPreferencesService.save(savedItems);
   }
 
   static void filterByCateg(String categTitle) {
@@ -47,7 +47,12 @@ class ItemController {
   static void updateQnt(Item item, int alt) {
     int newQnt = item.quant + alt;
     Item updatedItem = Item(
-        categ: item.categ, title: item.title, price: item.price, quant: newQnt);
+        categ: item.categ,
+        title: item.title,
+        description: item.description,
+        price: item.price,
+        quant: newQnt,
+        imgPath: item.imgPath);
     update(item, updatedItem);
   }
 
@@ -101,15 +106,15 @@ class ItemController {
   }
 
   static String? searchAlike(String? title, Item? edited) {
+    String titleSimplified = FormValidations.titlePartialValidation(title);
+    // Faz a primeira validação do Form para ver se o título é válido
+    if (FormValidations.invalidTitlePartials.contains(titleSimplified)) {
+      // Senão for retorna o tipo de invalidez
+      return titleSimplified;
+    }
     // Verifica se a lista está vazia
-    if (savedItems.length > 1) {
+    if (savedItems.isNotEmpty) {
       // Senão estiver vazia busca por títulos semelhantes (correspondentes ao tirar espaços brancos e maiúsculas)
-      String titleSimplified = FormValidations.titlePartialValidation(title);
-      // Faz a primeira validação do Form para ver se o título é válido
-      if (FormValidations.invalidTitlePartials.contains(titleSimplified)) {
-        // Senão for retorna o tipo de invalidez
-        return titleSimplified;
-      }
 
       int index = savedItems.indexWhere(
           (x) => x.title.replaceAll(" ", "").toLowerCase() == titleSimplified);

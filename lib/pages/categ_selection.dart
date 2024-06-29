@@ -7,9 +7,9 @@ import 'package:marketlist/models/categ.dart';
 import 'package:marketlist/pages/bottomNavigationBar.dart';
 import 'package:marketlist/pages/categ_form.dart';
 import 'package:marketlist/pages/item_list.dart';
-import 'package:marketlist/pages/widgets/form_fields.dart';
 import 'package:marketlist/services/categ_controller.dart';
 import 'package:marketlist/services/categ_shared_preferences.dart';
+import 'package:marketlist/services/item_controller.dart';
 import 'package:marketlist/services/navigationState_shared_preferences.dart';
 import 'package:marketlist/src/shared/themes/colors.dart';
 
@@ -95,7 +95,7 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ItemListScreen(
-                                        categ: categList[index + 1].title)));
+                                        categ: categList[index].title)));
                           }
                         }
                       },

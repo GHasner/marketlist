@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:marketlist/models/item.dart';
 import 'package:marketlist/pages/bottomNavigationBar.dart';
+import 'package:marketlist/pages/categ_selection.dart';
 import 'package:marketlist/pages/item_form.dart';
 import 'package:marketlist/pages/widgets/form_fields.dart';
+import 'package:marketlist/services/form_controller.dart';
 import 'package:marketlist/services/item_controller.dart';
 import 'package:marketlist/services/navigationState_shared_preferences.dart';
 import 'package:marketlist/src/shared/themes/colors.dart';
@@ -31,10 +33,16 @@ class _ItemListScreenState extends State<ItemListScreen> {
     await ItemController.getData();
     itemListIsEmpty = ItemController.savedItems == [];
     if (!itemListIsEmpty) {
-      if (_selection != '') {
+      if (_selection != "") {
         ItemController.filterByCateg(_selection);
         if (ItemController.filteredItems.isEmpty) {
-          itemListIsEmpty = true;
+          setState(() {
+            itemListIsEmpty = true;
+          });
+        } else {
+          setState(() {
+            itemListIsEmpty = false;
+          });
         }
       } else {
         ItemController.removeFilter();
@@ -98,14 +106,15 @@ class _ItemListScreenState extends State<ItemListScreen> {
                           if (_pressTimer!.elapsedMilliseconds > 600) {
                             // LongPress
                             _selectedItemOptions(
-                                ItemController.filteredItems[index + 1]);
+                                ItemController.filteredItems[index]);
                           } else {
                             // Tap
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ItemFormScreen(
-                                        item: ItemController.filteredItems[index],
+                                        item:
+                                            ItemController.filteredItems[index],
                                         categ: _categ,
                                       )),
                             );
@@ -114,43 +123,96 @@ class _ItemListScreenState extends State<ItemListScreen> {
                       },
                       child: Container(
                         width: 159,
-                        height: 200,
+                        height: 320,
                         color: ThemeColors.background,
                         child: Column(
                           children: <Widget>[
                             Container(
-                              height: 120,
-                              width: 150,
+                              width: 159,
+                              height: 159,
+                              alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 color: ThemeColors.container,
                                 borderRadius: BorderRadius.circular(10),
-                                image: DecorationImage(
-                                  image: FileImage(File(ItemController
-                                      .filteredItems[index].imgPath!)),
-                                  fit: BoxFit.contain,
+                              ),
+                              child: Container(
+                                height: 120,
+                                width: 150,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: FileImage(File(ItemController
+                                        .filteredItems[index].imgPath!)),
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
                               ),
                             ),
                             Container(
-                              alignment: Alignment.bottomCenter,
+                              padding: const EdgeInsets.only(top: 13),
+                              alignment: Alignment.topLeft,
+                              height: 64,
+                              width: 156,
                               child: Text(
                                 ItemController.filteredItems[index].title,
-                                textAlign: TextAlign.center,
+                                textAlign: TextAlign.start,
                                 style: GoogleFonts.poppins(
-                                  fontSize: 15,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                   color: ThemeColors.secondary,
                                 ),
                               ),
                             ),
-                            Text(ItemController.filteredItems[index].price
-                                .toString()),
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              height: 48,
+                              width: 156,
+                              child: Text(
+                                FormValidations.formatPrice(
+                                    ItemController.filteredItems[index].price),
+                                textAlign: TextAlign.start,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: ThemeColors.emphasis,
+                                ),
+                              ),
+                            ),
                             ElevatedButton(
                               onPressed: () {
                                 ItemController.updateQnt(
                                     ItemController.filteredItems[index], 1);
                               },
-                              child: const Icon(Icons.add),
+                              style: ElevatedButton.styleFrom(
+                                maximumSize: const Size(159, 40),
+                                minimumSize: const Size(159, 40),
+                                backgroundColor: ThemeColors.primary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  side: BorderSide.none,
+                                ),
+                                padding: const EdgeInsets.only(left: 11),
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: 10,
+                                    child: Icon(
+                                      Icons.shopping_cart,
+                                      color: ThemeColors.background,
+                                      size: 22,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 24),
+                                  Text(
+                                    "Adicionar",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: ThemeColors.background,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -177,36 +239,47 @@ class _ItemListScreenState extends State<ItemListScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ItemFormScreen(
-                                        item: ItemController.filteredItems[index],
+                                        item: ItemController
+                                            .filteredItems[index + 1],
                                         categ: _categ,
                                       )),
                             );
                           }
                         }
                       },
-                      child: Container(
+                      child: SizedBox(
                         width: 159,
-                        height: 200,
+                        height: 320,
                         child: Column(
                           children: <Widget>[
                             Container(
-                              height: 120,
-                              //width: 150,
+                              width: 159,
+                              height: 159,
+                              alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 color: ThemeColors.container,
                                 borderRadius: BorderRadius.circular(10),
-                                image: DecorationImage(
-                                  image: FileImage(File(ItemController
-                                      .filteredItems[index + 1].imgPath!)),
-                                  fit: BoxFit.contain,
+                              ),
+                              child: Container(
+                                height: 120,
+                                width: 150,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: FileImage(File(ItemController
+                                        .filteredItems[index + 1].imgPath!)),
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
                               ),
                             ),
                             Container(
-                              alignment: Alignment.bottomCenter,
+                              padding: const EdgeInsets.only(top: 13),
+                              alignment: Alignment.topLeft,
+                              height: 64,
+                              width: 156,
                               child: Text(
                                 ItemController.filteredItems[index + 1].title,
-                                textAlign: TextAlign.center,
+                                textAlign: TextAlign.start,
                                 style: GoogleFonts.poppins(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w500,
@@ -214,14 +287,57 @@ class _ItemListScreenState extends State<ItemListScreen> {
                                 ),
                               ),
                             ),
-                            Text(ItemController.filteredItems[index].price
-                                .toString()),
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              height: 48,
+                              width: 156,
+                              child: Text(
+                                FormValidations.formatPrice(ItemController
+                                    .filteredItems[index + 1].price),
+                                textAlign: TextAlign.start,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: ThemeColors.emphasis,
+                                ),
+                              ),
+                            ),
                             ElevatedButton(
                               onPressed: () {
                                 ItemController.updateQnt(
-                                    ItemController.filteredItems[index], 1);
+                                    ItemController.filteredItems[index + 1], 1);
                               },
-                              child: const Icon(Icons.add),
+                              style: ElevatedButton.styleFrom(
+                                maximumSize: const Size(159, 40),
+                                minimumSize: const Size(159, 40),
+                                backgroundColor: ThemeColors.primary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  side: BorderSide.none,
+                                ),
+                                padding: const EdgeInsets.only(left: 11),
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: 10,
+                                    child: Icon(
+                                      Icons.shopping_cart,
+                                      color: ThemeColors.background,
+                                      size: 22,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 24),
+                                  Text(
+                                    "Adicionar",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: ThemeColors.background,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -261,36 +377,47 @@ class _ItemListScreenState extends State<ItemListScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ItemFormScreen(
-                                        item: ItemController.filteredItems[index],
+                                        item:
+                                            ItemController.filteredItems[index],
                                         categ: _categ,
                                       )),
                             );
                           }
                         }
                       },
-                      child: Container(
+                      child: SizedBox(
                         width: 159,
-                        height: 200,
+                        height: 320,
                         child: Column(
                           children: <Widget>[
                             Container(
-                              height: 120,
-                              width: 150,
+                              width: 159,
+                              height: 159,
+                              alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 color: ThemeColors.container,
                                 borderRadius: BorderRadius.circular(10),
-                                image: DecorationImage(
-                                  image: FileImage(File(ItemController
-                                      .filteredItems[index].imgPath!)),
-                                  fit: BoxFit.contain,
+                              ),
+                              child: Container(
+                                height: 120,
+                                width: 150,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: FileImage(File(ItemController
+                                        .filteredItems[index].imgPath!)),
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
                               ),
                             ),
                             Container(
-                              alignment: Alignment.bottomCenter,
+                              padding: const EdgeInsets.only(top: 13),
+                              alignment: Alignment.topLeft,
+                              height: 64,
+                              width: 156,
                               child: Text(
                                 ItemController.filteredItems[index].title,
-                                textAlign: TextAlign.center,
+                                textAlign: TextAlign.start,
                                 style: GoogleFonts.poppins(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w500,
@@ -298,14 +425,57 @@ class _ItemListScreenState extends State<ItemListScreen> {
                                 ),
                               ),
                             ),
-                            Text(ItemController.filteredItems[index].price
-                                .toString()),
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              height: 48,
+                              width: 156,
+                              child: Text(
+                                FormValidations.formatPrice(
+                                    ItemController.filteredItems[index].price),
+                                textAlign: TextAlign.start,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: ThemeColors.emphasis,
+                                ),
+                              ),
+                            ),
                             ElevatedButton(
                               onPressed: () {
                                 ItemController.updateQnt(
                                     ItemController.filteredItems[index], 1);
                               },
-                              child: const Icon(Icons.add),
+                              style: ElevatedButton.styleFrom(
+                                maximumSize: const Size(159, 40),
+                                minimumSize: const Size(159, 40),
+                                backgroundColor: ThemeColors.primary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  side: BorderSide.none,
+                                ),
+                                padding: const EdgeInsets.only(left: 11),
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: 10,
+                                    child: Icon(
+                                      Icons.shopping_cart,
+                                      color: ThemeColors.background,
+                                      size: 22,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 24),
+                                  Text(
+                                    "Adicionar",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: ThemeColors.background,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -343,7 +513,25 @@ class _ItemListScreenState extends State<ItemListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_categ),
+        automaticallyImplyLeading: false,
+        title: Row(
+          children: <Widget>[
+            GestureDetector(
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CategSelectScreen())),
+              child: const Icon(Icons.arrow_back),
+            ),
+            const SizedBox(width: 28), // Padding
+            Text(
+              _categ,
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
         actions: <Widget>[
           PopupMenuButton(
             icon: const Icon(Icons.more_vert),
