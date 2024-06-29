@@ -1,9 +1,9 @@
 import "package:flutter/material.dart";
 
 class ThemeColors {
-  static Color primary = const Color.fromARGB(255, 94, 196, 1);
-  static Color primaryMediumDark = const Color.fromARGB(255, 81, 164, 2);
   static Color primaryDark = const Color.fromARGB(255, 75, 133, 21);
+  static Color primaryMediumDark = const Color.fromARGB(255, 81, 164, 2);
+  static Color primary = const Color.fromARGB(255, 94, 196, 1);
 
   static Color secondary = const Color.fromARGB(255, 55, 71, 79);
   static Color secondaryMedium = const Color.fromARGB(255, 68, 82, 90);
@@ -34,6 +34,7 @@ class ThemeColors {
   static Color lightGrey = const Color.fromARGB(255, 200, 200, 200);
   static Color light = const Color.fromARGB(255, 240, 240, 240);
   static Color cancel = const Color.fromARGB(255, 213, 118, 112);
+  static Color cancelSutil = const Color.fromARGB(255, 255, 245, 245);
   static Color error = const Color.fromARGB(255, 217, 72, 62);
   static Color neutral = const Color.fromARGB(255, 178, 174, 183);
   static Color lowDetail = const Color.fromARGB(255, 147, 155, 160);
