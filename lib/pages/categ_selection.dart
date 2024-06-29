@@ -41,7 +41,12 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
       future: CategPreferencesService.get(),
       builder: (context, AsyncSnapshot<List<Categ>?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return Center(
+              child: SizedBox(
+                  height: 50,
+                  width: 50,
+                  child:
+                      CircularProgressIndicator(color: ThemeColors.primary)));
         } else if (snapshot.hasError) {
           return Text(
               'Ocorreu um erro ao carregar as categorias: ${snapshot.error}');
