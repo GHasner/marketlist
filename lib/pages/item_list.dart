@@ -493,20 +493,144 @@ class _ItemListScreenState extends State<ItemListScreen> {
   }
 
   void _selectedItemOptions(Item item) {
-    CustomPopUps.editDeleteModal(
-      context,
-      MaterialPageRoute(
-          builder: (context) => ItemFormScreen(item: item, categ: _categ)),
-      CustomPopUps.dialog(
-        context,
-        "deleteItem",
-        "Cancelar",
-        "Excluir",
-        setState(() {
-          ItemController.delete(item);
-          _searchForItems();
-        }),
-      ),
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          height: 140,
+          padding: const EdgeInsets.only(bottom: 20),
+          width: double.infinity,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  alignment: Alignment.center,
+                  elevation: 0,
+                  maximumSize: const Size(200, 100),
+                  minimumSize: const Size(190, 100),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ItemFormScreen(
+                              item: item,
+                              categ: _categ,
+                            ))),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const Icon(
+                      Icons.edit,
+                      size: 36,
+                    ),
+                    Text(
+                      "Editar",
+                      style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12) // Padding
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  alignment: Alignment.center,
+                  elevation: 0,
+                  maximumSize: const Size(200, 100),
+                  minimumSize: const Size(190, 100),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _confirmDeleteDialog(item);
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const Icon(
+                      Icons.delete,
+                      size: 36,
+                    ),
+                    Text(
+                      "Deletar",
+                      style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12) // Padding
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _confirmDeleteDialog(Item item) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(
+            "Excluir Item",
+            style: TextStyle(
+              fontSize: 20,
+              // color: ,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          content: const Text(
+            "Tem certeza de que deseja excluir este item?",
+            style: TextStyle(
+              fontSize: 16,
+              // color: ,
+            ),
+          ),
+          actions: <Widget>[
+            // Opcão: Cancelar ação
+            TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(ThemeColors.neutral),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                return;
+              },
+              child: const Text(
+                "Cancelar",
+                style: TextStyle(fontSize: 15),
+              ),
+            ),
+            // Opção: Confirmar ação
+            TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(ThemeColors.cancel),
+              ),
+              onPressed: () {
+                setState(() {
+                  ItemController.delete(item);
+                });
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "Excluir",
+                style: TextStyle(fontSize: 15),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

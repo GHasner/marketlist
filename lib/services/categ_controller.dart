@@ -1,6 +1,7 @@
 import 'package:marketlist/models/categ.dart';
 import 'package:marketlist/services/categ_shared_preferences.dart';
 import 'package:marketlist/services/form_controller.dart';
+import 'package:marketlist/services/item_controller.dart';
 
 class CategController {
   static List<Categ> savedCategories = [];
@@ -42,6 +43,7 @@ class CategController {
     categ = savedCategories.lastWhere((c) => c.title == categ.title);
     savedCategories.remove(categ);
     setData();
+    ItemController.deleteCateg(categ.title);
   }
 
   static Categ? search(String title) {

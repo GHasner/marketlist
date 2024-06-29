@@ -403,7 +403,7 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
             ),
           ),
           content: const Text(
-            "Tem certeza de que deseja excluir esta categoria?",
+            "Tem certeza de que deseja excluir esta categoria? Todos os itens desta categoria serão excluídos.",
             style: TextStyle(
               fontSize: 16,
               // color: ,

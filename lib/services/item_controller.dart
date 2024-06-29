@@ -91,6 +91,11 @@ class ItemController {
     }
   }
 
+  static void deleteCateg(String categ) {
+    savedItems.removeWhere((i) => i.categ == categ);
+    setData();
+  }
+
   static void delete(Item item) {
     item = savedItems.lastWhere((i) => i.title == item.title);
     savedItems.remove(item);
