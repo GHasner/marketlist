@@ -44,6 +44,7 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
       _refTitle = _item!.title;
       _title.text = _item!.title;
       _description.text = _item!.description!;
+      _price.text = FormValidations.formatPrice(_item!.price);
       _imgPath = _item!.imgPath!;
       _image = File(_imgPath);
     }

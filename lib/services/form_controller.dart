@@ -6,7 +6,7 @@ import 'package:marketlist/models/item.dart';
 class FormValidations {
   static bool execCallBack = false;
   static bool execPartialCallBack = false;
-  
+
   static List<String> invalidTitlePartials = [
     'titleEmpty',
     'tooLong',
@@ -54,9 +54,12 @@ class FormValidations {
     return true;
   }
 
-  static String formatPrice (double price) {
+  static String formatPrice(double price) {
     String decimals = price.toString().split('.').last;
     String integerPart = price.toString().split('.').first;
+    for (int i = decimals.length; i < 2; i++) {
+      decimals += "0";
+    }
     String temp = "";
     int countThousand = 1;
     for (int i = integerPart.length - 1; i >= 0; i--) {
@@ -75,7 +78,7 @@ class FormValidations {
     return formatedPrice;
   }
 
-  static double convertPriceToDouble (String price) {
+  static double convertPriceToDouble(String price) {
     String unformatedPrice = price;
     unformatedPrice = unformatedPrice.replaceAll("R\$", "");
     unformatedPrice = unformatedPrice.replaceAll(" ", "");
@@ -86,22 +89,21 @@ class FormValidations {
 }
 
 class CurrencyInputFormatter extends TextInputFormatter {
-
-    @override
-      TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-
-        if(newValue.selection.baseOffset == 0){
-            return newValue;
-        }
-
-        double value = double.parse(newValue.text);
-
-        final formatter = NumberFormat.simpleCurrency(locale: "pt_Br");
-
-        String newText = formatter.format(value/100);
-
-        return newValue.copyWith(
-            text: newText,
-            selection: TextSelection.collapsed(offset: newText.length));
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.selection.baseOffset == 0) {
+      return newValue;
     }
+
+    double value = double.parse(newValue.text);
+
+    final formatter = NumberFormat.simpleCurrency(locale: "pt_Br");
+
+    String newText = formatter.format(value / 100);
+
+    return newValue.copyWith(
+        text: newText,
+        selection: TextSelection.collapsed(offset: newText.length));
+  }
 }

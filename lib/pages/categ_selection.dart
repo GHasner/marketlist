@@ -479,7 +479,7 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const ItemListScreen(categ: '')));
+                  builder: (context) => const ItemListScreen(categ: "")));
         },
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(

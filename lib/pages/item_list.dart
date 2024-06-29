@@ -22,7 +22,7 @@ class ItemListScreen extends StatefulWidget {
 
 class _ItemListScreenState extends State<ItemListScreen> {
   String get _selection => widget.categ;
-  late String _categ;
+  late String _title = "";
   late String autoRef;
   late bool itemListIsEmpty = true;
 
@@ -44,7 +44,9 @@ class _ItemListScreenState extends State<ItemListScreen> {
           });
         }
       } else {
-        ItemController.removeFilter();
+        setState(() {
+          ItemController.removeFilter();
+        });
       }
     }
   }
@@ -52,10 +54,10 @@ class _ItemListScreenState extends State<ItemListScreen> {
   void _getStrings() {
     if (_selection == "") {
       autoRef = "";
-      _categ = "Todos os produtos";
+      _title = "Todos os produtos";
     } else {
       autoRef = " nesta categoria";
-      _categ = _selection;
+      _title = _selection;
     }
   }
 
@@ -114,7 +116,8 @@ class _ItemListScreenState extends State<ItemListScreen> {
                                   builder: (context) => ItemFormScreen(
                                         item:
                                             ItemController.filteredItems[index],
-                                        categ: _categ,
+                                        categ: ItemController
+                                            .filteredItems[index].categ,
                                       )),
                             );
                           }
@@ -240,7 +243,8 @@ class _ItemListScreenState extends State<ItemListScreen> {
                                   builder: (context) => ItemFormScreen(
                                         item: ItemController
                                             .filteredItems[index + 1],
-                                        categ: _categ,
+                                        categ: ItemController
+                                            .filteredItems[index].categ,
                                       )),
                             );
                           }
@@ -378,7 +382,8 @@ class _ItemListScreenState extends State<ItemListScreen> {
                                   builder: (context) => ItemFormScreen(
                                         item:
                                             ItemController.filteredItems[index],
-                                        categ: _categ,
+                                        categ: ItemController
+                                            .filteredItems[index].categ,
                                       )),
                             );
                           }
@@ -517,7 +522,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
                     MaterialPageRoute(
                         builder: (context) => ItemFormScreen(
                               item: item,
-                              categ: _categ,
+                              categ: item.categ,
                             ))),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -633,6 +638,55 @@ class _ItemListScreenState extends State<ItemListScreen> {
     );
   }
 
+  List<Widget>? _options() {
+    if (_selection != "") {
+      return <Widget>[
+        PopupMenuButton(
+          icon: const Icon(Icons.more_vert),
+          onSelected: (String option) {
+            switch (option) {
+              case "newItem":
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ItemFormScreen(
+                            item: null,
+                            categ: _selection,
+                          )),
+                );
+                break;
+            }
+          },
+          itemBuilder: (context) {
+            return [
+              PopupMenuItem(
+                value: "newItem",
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      "Novo Item",
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: ThemeColors.primaryDark,
+                      ),
+                    ),
+                    Icon(
+                      Icons.add_circle_outline_rounded,
+                      color: ThemeColors.primaryDark,
+                    ),
+                  ],
+                ),
+              ),
+            ];
+          },
+        ),
+      ];
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -649,56 +703,14 @@ class _ItemListScreenState extends State<ItemListScreen> {
             ),
             const SizedBox(width: 28), // Padding
             Text(
-              _categ,
+              _title,
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w500,
               ),
             ),
           ],
         ),
-        actions: <Widget>[
-          PopupMenuButton(
-            icon: const Icon(Icons.more_vert),
-            onSelected: (String option) {
-              switch (option) {
-                case "newItem":
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ItemFormScreen(
-                              item: null,
-                              categ: _categ,
-                            )),
-                  );
-                  break;
-              }
-            },
-            itemBuilder: (context) {
-              return [
-                PopupMenuItem(
-                  value: "newItem",
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        "Novo Item",
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: ThemeColors.primaryDark,
-                        ),
-                      ),
-                      Icon(
-                        Icons.add_circle_outline_rounded,
-                        color: ThemeColors.primaryDark,
-                      ),
-                    ],
-                  ),
-                ),
-              ];
-            },
-          ),
-        ],
+        actions: _options(),
       ),
       backgroundColor: ThemeColors.background,
       body: Center(
