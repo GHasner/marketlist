@@ -36,4 +36,5 @@ class ThemeColors {
   static Color cancel = const Color.fromARGB(255, 213, 118, 112);
   static Color error = const Color.fromARGB(255, 217, 72, 62);
   static Color neutral = const Color.fromARGB(255, 178, 174, 183);
+  static Color lowDetail = const Color.fromARGB(255, 147, 155, 160);
 }

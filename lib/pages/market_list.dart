@@ -13,17 +13,15 @@ class MarketListScreen extends StatefulWidget {
 }
 
 class _MarketListScreenState extends State<MarketListScreen> {
-  late List<Item>? _shopCart;
 
   @override
   void initState() {
     super.initState();
     ItemController.refreshMarketList();
-    _shopCart = ItemController.shopCart;
   }
 
   Widget _marketList() {
-    if (_shopCart == null || _shopCart!.isEmpty) {
+    if (ItemController.shopCart.isEmpty) {
       return Padding(
         padding: const EdgeInsets.only(top: 200),
         child: Text(
@@ -36,7 +34,7 @@ class _MarketListScreenState extends State<MarketListScreen> {
       );
     } else {
       return ListView.builder(
-        itemCount: _shopCart!.length,
+        itemCount: ItemController.shopCart.length,
         itemBuilder: (context, index) {
           return null;
         },
