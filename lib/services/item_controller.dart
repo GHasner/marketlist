@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:marketlist/models/item.dart';
 import 'package:marketlist/services/file_controller.dart';
 import 'package:marketlist/services/form_controller.dart';
@@ -45,8 +46,12 @@ class ItemController {
     setData();
   }
 
-  static void updateQnt(Item item, int alt) {
+  static void updateQnt(Item item, int alt, BuildContext context) {
     int newQnt = item.quant + alt;
+    if (newQnt > 999) {
+      FormValidations.showAlertDialog(context, "limit");
+      return;
+    }
     Item updatedItem = Item(
         categ: item.categ,
         title: item.title,

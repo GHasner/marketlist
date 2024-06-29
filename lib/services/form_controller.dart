@@ -1,9 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:marketlist/models/item.dart';
+import 'package:marketlist/src/shared/themes/colors.dart';
 
 class FormValidations {
   static bool execCallBack = false;
@@ -96,6 +98,45 @@ class FormValidations {
     unformatedPrice = unformatedPrice.replaceAll(",", ".");
     double value = double.parse(unformatedPrice);
     return value;
+  }
+
+  static void showAlertDialog(BuildContext context, String type) {
+    String alert = "";
+    switch (type) {
+      case "limit":
+        alert = "Quantidade máxima atingida.";
+        break;
+    }
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Text(
+            alert,
+            style: const TextStyle(
+              fontSize: 16,
+              // color: ,
+            ),
+          ),
+          actions: <Widget>[
+            // Opcão: Confirmar
+            TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(ThemeColors.neutral),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                return;
+              },
+              child: const Text(
+                "Ok",
+                style: TextStyle(fontSize: 15),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 

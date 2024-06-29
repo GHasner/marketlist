@@ -110,7 +110,9 @@ class _MarketListScreenState extends State<MarketListScreen> {
                                   child: ElevatedButton(
                                     onPressed: () => setState(() {
                                       ItemController.updateQnt(
-                                          ItemController.shopCart[index], -1);
+                                          ItemController.shopCart[index],
+                                          -1,
+                                          context);
                                       ItemController.refreshMarketList();
                                     }),
                                     style: ElevatedButton.styleFrom(
@@ -142,7 +144,9 @@ class _MarketListScreenState extends State<MarketListScreen> {
                                   child: ElevatedButton(
                                     onPressed: () => setState(() {
                                       ItemController.updateQnt(
-                                          ItemController.shopCart[index], 1);
+                                          ItemController.shopCart[index],
+                                          1,
+                                          context);
                                       ItemController.refreshMarketList();
                                     }),
                                     style: ElevatedButton.styleFrom(

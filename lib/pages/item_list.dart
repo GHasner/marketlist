@@ -182,7 +182,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
                             ElevatedButton(
                               onPressed: () {
                                 ItemController.updateQnt(
-                                    ItemController.filteredItems[index], 1);
+                                    ItemController.filteredItems[index], 1, context);
                               },
                               style: ElevatedButton.styleFrom(
                                 maximumSize: const Size(159, 40),
@@ -308,7 +308,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
                             ElevatedButton(
                               onPressed: () {
                                 ItemController.updateQnt(
-                                    ItemController.filteredItems[index + 1], 1);
+                                    ItemController.filteredItems[index + 1], 1, context);
                               },
                               style: ElevatedButton.styleFrom(
                                 maximumSize: const Size(159, 40),
@@ -447,7 +447,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
                             ElevatedButton(
                               onPressed: () {
                                 ItemController.updateQnt(
-                                    ItemController.filteredItems[index], 1);
+                                    ItemController.filteredItems[index], 1, context);
                               },
                               style: ElevatedButton.styleFrom(
                                 maximumSize: const Size(159, 40),
