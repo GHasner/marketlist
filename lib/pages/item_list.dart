@@ -6,7 +6,6 @@ import 'package:marketlist/models/item.dart';
 import 'package:marketlist/pages/bottomNavigationBar.dart';
 import 'package:marketlist/pages/categ_selection.dart';
 import 'package:marketlist/pages/item_form.dart';
-import 'package:marketlist/pages/widgets/form_fields.dart';
 import 'package:marketlist/services/form_controller.dart';
 import 'package:marketlist/services/item_controller.dart';
 import 'package:marketlist/services/navigationState_shared_preferences.dart';
