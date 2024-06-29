@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:marketlist/models/item.dart';
 import 'package:marketlist/pages/bottomNavigationBar.dart';
 import 'package:marketlist/services/item_controller.dart';
+import 'package:marketlist/src/shared/themes/colors.dart';
 
 class MarketListScreen extends StatefulWidget {
   const MarketListScreen({super.key});
@@ -36,7 +37,21 @@ class _MarketListScreenState extends State<MarketListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _marketList(),
+      backgroundColor: ThemeColors.background,
+      body: Center(
+        child: Container(
+          padding: const EdgeInsets.only(top: 60),
+          height: double.infinity,
+          width: 340,
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                _marketList(),
+              ],
+            ),
+          ),
+        ),
+      ),
       bottomNavigationBar: const BottomNavBar(),
     );
   }

@@ -452,13 +452,12 @@ class _CategSelectScreenState extends State<CategSelectScreen> {
       backgroundColor: ThemeColors.backgroundAlt,
       body: Center(
         child: Container(
-          padding: const EdgeInsets.only(top: 12),
+          padding: const EdgeInsets.only(top: 60),
           height: double.infinity,
           width: 340,
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                const SizedBox(height: 48), // Padding
                 _unselectedButton(),
                 _loadCategories(),
               ],
