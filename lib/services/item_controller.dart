@@ -39,7 +39,8 @@ class ItemController {
   }
 
   static void update(Item itemOld, Item itemNew) {
-    int index = savedItems.indexOf(itemOld);
+    // int index = savedItems.indexOf(itemOld);
+    int index = savedItems.indexWhere((i) => i.title == itemOld.title);
     savedItems[index] = itemNew;
     setData();
   }
